@@ -15,7 +15,7 @@ app.use(express.static('public')); // Serve static frontend
  * Handle Aura requests
  */
 async function handleAuraRequest(req, res) {
-    const walletAddress = req.query.wallet || req.body.wallet_address || req.body.wallet;
+    const walletAddress = req.query?.wallet || req.body?.wallet_address || req.body?.wallet;
     
     if (!walletAddress) {
         return res.status(400).json({ error: 'Wallet address is required.' });
