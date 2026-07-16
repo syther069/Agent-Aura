@@ -118,6 +118,25 @@ main.active {
     align-items: center;
 }
 
+@keyframes elementEntrance {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.state-form.active .site-title {
+    animation: elementEntrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.state-form.active .description {
+    opacity: 0; /* Starts hidden until animation */
+    animation: elementEntrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+}
+
+.state-form.active .form-section {
+    opacity: 0;
+    animation: elementEntrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+}
+
 .form-section {
     width: 100%;
     max-width: 480px;
@@ -228,6 +247,10 @@ button {
 .state-loading {
     justify-content: center;
     align-items: center;
+}
+
+.state-loading.active .loader {
+    animation: elementEntrance 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .loader {
