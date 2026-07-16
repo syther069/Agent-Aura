@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Aura — Reveal Your On-Chain Personality</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container" id="app">
+        
+        <!-- Default State: Form -->
+        <main class="state-form active" id="state-form">
+            <header>
+                <h1 class="site-title">Agent Aura</h1>
+            </header>
+            
+            <section class="form-section">
+                <p class="description">A single call to reveal your on-chain personality.<br>No signatures, no risk, just your aura.</p>
+                <form id="aura-form">
+                    <div class="input-group">
+                        <label for="wallet-input" class="micro-label">ENTER WALLET ADDRESS</label>
+                        <input type="text" id="wallet-input" placeholder="0x..." required autocomplete="off" spellcheck="false">
+                    </div>
+                    <button type="submit" class="btn-primary">Reveal My Aura</button>
+                </form>
+            </section>
+        </main>
+
+        <!-- Loading State -->
+        <main class="state-loading" id="state-loading">
+            <div class="loader">
+                <p class="reading-text">Reading your wallet...</p>
+                <div class="progress-line"></div>
+            </div>
+        </main>
+
+        <!-- Result State -->
+        <main class="state-result" id="state-result">
+            <header class="result-header">
+                <h2 class="micro-label">YOUR AURA</h2>
+            </header>
+            
+            <div class="card-container">
+                <img id="card-image" src="" alt="Your Aura Card">
+            </div>
+            
+            <div class="result-actions">
+                <button id="share-btn" class="btn-primary result-btn">Share Result</button>
+                <button id="reset-btn" class="btn-secondary">Try Another Wallet</button>
+            </div>
+        </main>
+
+    </div>
+
+    <script src="/app.js"></script>
+</body>
+</html>
