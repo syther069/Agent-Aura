@@ -320,18 +320,32 @@ button {
 }
 
 @media (max-width: 768px) {
+    .container {
+        padding: 1.5rem 1rem;
+    }
     .site-title {
-        font-size: 3.5rem;
+        /* Let the clamp handle scaling, but reduce line-height if needed */
+        margin-bottom: 1.5rem;
+    }
+    .description {
+        font-size: 0.95rem;
     }
     .form-section, .loader {
-        padding: 2rem 1.5rem;
+        padding: 2.5rem 1.25rem;
         border-left: none;
         border-right: none;
+        box-shadow: none; /* Flatten on mobile for cleaner look */
     }
     .form-section::before, .form-section::after {
         display: none;
     }
+    input[type="text"] {
+        font-size: 1.1rem;
+    }
     .result-actions {
         flex-direction: column;
+    }
+    .btn-primary, .btn-secondary {
+        padding: 1rem;
     }
 }
