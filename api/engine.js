@@ -37,8 +37,8 @@ async function getEtherscanSignals(walletAddress) {
         });
 
         const data = response.data;
-        if (data.status !== '1' && data.message !== 'No transactions found') {
-            console.warn(`Etherscan API error/warning: ${data.result}`);
+        if (data.status === '0' && data.message !== 'No transactions found') {
+            throw new Error(`Etherscan API error/warning: ${data.result}`);
         }
 
         const txs = Array.isArray(data.result) ? data.result : [];
