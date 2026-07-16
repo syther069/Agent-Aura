@@ -20,9 +20,10 @@ async function getEtherscanSignals(walletAddress) {
     }
 
     try {
-        // Fetch up to 10,000 normal transactions for the address
-        const response = await axios.get('https://api.etherscan.io/api', {
+        // Fetch up to 10,000 normal transactions for the address using V2 API
+        const response = await axios.get('https://api.etherscan.io/v2/api', {
             params: {
+                chainid: 1,
                 module: 'account',
                 action: 'txlist',
                 address: walletAddress,
