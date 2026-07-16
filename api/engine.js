@@ -14,12 +14,12 @@ function hashString(str) {
  * Fetch real on-chain signals from Etherscan.
  */
 async function getEtherscanSignals(walletAddress) {
-    const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
-    if (!ETHERSCAN_API_KEY) {
-        throw new Error("Etherscan API key is not configured.");
-    }
-
     try {
+        const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
+        if (!ETHERSCAN_API_KEY) {
+            throw new Error("Etherscan API key is not configured.");
+        }
+
         // Fetch up to 10,000 normal transactions for the address using V2 API
         const response = await axios.get('https://api.etherscan.io/v2/api', {
             params: {
