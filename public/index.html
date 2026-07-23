@@ -6,7 +6,7 @@
     <title>Agent Aura — Reveal Your On-Chain Personality</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
@@ -22,8 +22,14 @@
                 <p class="description">A single call to reveal your on-chain personality.<br>No signatures, no risk, just your aura.</p>
                 <form id="aura-form">
                     <div class="input-group">
-                        <label for="wallet-input" class="micro-label">ENTER WALLET ADDRESS</label>
-                        <input type="text" id="wallet-input" placeholder="0x..." required autocomplete="off" spellcheck="false">
+                        <label for="wallet-input" class="micro-label">ENTER WALLET ADDRESS OR ENS</label>
+                        <input type="text" id="wallet-input" placeholder="0x... or vitalik.eth" required autocomplete="off" spellcheck="false">
+                    </div>
+                    <div class="demo-chips">
+                        <span class="micro-label">TRY DEMO:</span>
+                        <button type="button" class="chip-btn" data-wallet="vitalik.eth">⚡ vitalik.eth</button>
+                        <button type="button" class="chip-btn" data-wallet="0x28c6c06298d514db089934071355e5743bf21d60">🌾 Binance Hot</button>
+                        <button type="button" class="chip-btn" data-wallet="0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045">🐋 OG Whale</button>
                     </div>
                     <button type="submit" class="btn-primary">Reveal My Aura</button>
                 </form>
@@ -33,7 +39,7 @@
         <!-- Loading State -->
         <main class="state-loading" id="state-loading">
             <div class="loader">
-                <p class="reading-text">Reading your wallet...</p>
+                <p class="reading-text">Reading on-chain signals...</p>
                 <div class="progress-line"></div>
             </div>
         </main>
@@ -41,7 +47,7 @@
         <!-- Result State -->
         <main class="state-result" id="state-result">
             <header class="result-header">
-                <h2 class="micro-label">YOUR AURA</h2>
+                <h2 class="micro-label">YOUR AURA CARD</h2>
             </header>
             
             <div class="card-container">
@@ -49,12 +55,16 @@
             </div>
             
             <div class="result-actions">
-                <button id="share-btn" class="btn-primary result-btn">Share Result</button>
+                <button id="download-btn" class="btn-primary result-btn">Download Card</button>
+                <button id="share-x-btn" class="btn-secondary">Share on X</button>
+                <button id="copy-btn" class="btn-secondary">Copy Link</button>
                 <button id="reset-btn" class="btn-secondary">Try Another Wallet</button>
             </div>
         </main>
 
     </div>
+
+    <div id="toast" class="toast"></div>
 
     <script src="/app.js"></script>
 </body>

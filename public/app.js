@@ -7,8 +7,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('wallet-input');
     const cardImage = document.getElementById('card-image');
     
-    const shareBtn = document.getElementById('share-btn');
+    const downloadBtn = document.getElementById('download-btn');
+    const shareXBtn = document.getElementById('share-x-btn');
+    const copyBtn = document.getElementById('copy-btn');
     const resetBtn = document.getElementById('reset-btn');
+    const toast = document.getElementById('toast');
+    const chipBtns = document.querySelectorAll('.chip-btn');
+
+    let currentResultData = null;
+    let currentWallet = '';
+
+    function showToast(message) {
+        if (!toast) return;
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+    }
 
     function switchState(stateId) {
         [stateForm, stateLoading, stateResult].forEach(el => {
@@ -17,60 +31,85 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById(stateId).classList.add('active');
     }
 
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const wallet = input.value.trim();
+    async function fetchAura(wallet) {
         if (!wallet) return;
-
+        currentWallet = wallet;
         switchState('state-loading');
 
         try {
             const response = await fetch(`/aura?wallet=${encodeURIComponent(wallet)}`);
-            if (!response.ok) throw new Error('API error');
+            if (!response.ok) throw new Error('API error reading aura');
             
             const data = await response.json();
+            currentResultData = data;
             
-            // Set image source
             cardImage.src = data.card_image_base64 || data.card_svg_url;
             
-            // Set accent color if provided by API (extending spec for UI)
             if (data.accent_color) {
                 document.documentElement.style.setProperty('--accent-color', data.accent_color);
             } else {
                 document.documentElement.style.setProperty('--accent-color', '#171512');
             }
 
-            // Small delay to ensure image loads before transition
             setTimeout(() => {
                 switchState('state-result');
-            }, 500);
+            }, 400);
 
         } catch (error) {
             console.error(error);
-            alert('Failed to read aura. Please try again.');
+            showToast('Failed to read aura. Please check the address and try again.');
             switchState('state-form');
         }
+    }
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        fetchAura(input.value.trim());
+    });
+
+    chipBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const wallet = btn.getAttribute('data-wallet');
+            input.value = wallet;
+            fetchAura(wallet);
+        });
     });
 
     resetBtn.addEventListener('click', () => {
         input.value = '';
+        currentResultData = null;
+        currentWallet = '';
         document.documentElement.style.setProperty('--accent-color', '#171512');
         switchState('state-form');
     });
 
-    shareBtn.addEventListener('click', async () => {
-        if (navigator.share) {
-            try {
-                await navigator.share({
-                    title: 'My Agent Aura',
-                    text: 'I just revealed my on-chain aura! Check yours out.',
-                    url: window.location.href
-                });
-            } catch (err) {
-                console.log('Share canceled or failed');
-            }
-        } else {
-            alert('Screenshot this card and tag someone to reveal their Aura!');
+    downloadBtn.addEventListener('click', () => {
+        if (!currentResultData) return;
+        const link = document.createElement('a');
+        link.href = currentResultData.card_image_base64 || `/card?wallet=${encodeURIComponent(currentWallet)}&download=true`;
+        link.download = `agent-aura-${currentWallet}.svg`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        showToast('SVG Card downloaded successfully!');
+    });
+
+    shareXBtn.addEventListener('click', () => {
+        if (!currentResultData) return;
+        const archetypeText = currentResultData.archetype || 'Web3 Archetype';
+        const text = encodeURIComponent(`I just revealed my on-chain aura: "${archetypeText}" via @OKX Agent Aura! 🔮✨\n\nReveal yours on-chain:`);
+        const url = encodeURIComponent(window.location.href);
+        window.open(`https://x.com/intent/post?text=${text}&url=${url}`, '_blank');
+    });
+
+    copyBtn.addEventListener('click', async () => {
+        try {
+            const shareUrl = `${window.location.origin}/card?wallet=${encodeURIComponent(currentWallet)}`;
+            await navigator.clipboard.writeText(shareUrl);
+            showToast('Card URL copied to clipboard!');
+        } catch (err) {
+            showToast('Failed to copy URL');
         }
     });
 });
+

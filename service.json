@@ -1,0 +1,1 @@
+[{"serviceName":"Wallet Aura Reader","serviceDescription":"Analyzes an Ethereum wallet's on-chain history to determine its Web3 archetype and generates a customized, soulbound SVG card.\n1. The target wallet address","serviceType":"A2MCP","fee":"0","endpoint":"https://agent-aura-umber.vercel.app/aura"}]

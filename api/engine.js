@@ -6,14 +6,38 @@ const archetypes = require('./archetypes');
  * Deterministically generate an integer from a string seed (fallback).
  */
 function hashString(str) {
-    const hash = crypto.createHash('sha256').update(str.toLowerCase()).digest('hex');
+    const safeStr = typeof str === 'string' ? str : String(str || '');
+    const hash = crypto.createHash('sha256').update(safeStr.toLowerCase()).digest('hex');
     return parseInt(hash.substring(0, 8), 16);
+}
+
+/**
+ * Resolve ENS domain (e.g. vitalik.eth) to a 0x address
+ */
+async function resolveEns(input) {
+    if (!input || typeof input !== 'string') return input;
+    const trimmed = input.trim();
+    if (/^0x[a-fA-F0-9]{40}$/.test(trimmed)) {
+        return trimmed;
+    }
+    if (/\.eth$/i.test(trimmed)) {
+        try {
+            const res = await axios.get(`https://api.ensideas.com/ens/resolve/${encodeURIComponent(trimmed.toLowerCase())}`, { timeout: 3500 });
+            if (res.data && res.data.address) {
+                return res.data.address;
+            }
+        } catch (err) {
+            console.warn(`ENS resolution failed for ${trimmed}, falling back:`, err.message);
+        }
+    }
+    return trimmed;
 }
 
 /**
  * Fetch real on-chain signals from Etherscan.
  */
-async function getEtherscanSignals(walletAddress) {
+async function getEtherscanSignals(rawAddress) {
+    const walletAddress = await resolveEns(rawAddress);
     try {
         const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
         if (!ETHERSCAN_API_KEY) {
@@ -33,7 +57,8 @@ async function getEtherscanSignals(walletAddress) {
                 offset: 10000,
                 sort: 'asc',
                 apikey: ETHERSCAN_API_KEY
-            }
+            },
+            timeout: 5000
         });
 
         const data = response.data;
@@ -58,9 +83,6 @@ async function getEtherscanSignals(walletAddress) {
             const uniqueToAddresses = new Set();
             txs.forEach(tx => {
                 if (tx.to) uniqueToAddresses.add(tx.to.toLowerCase());
-                
-                // Very crude heuristic for high risk: lots of failed txs or interacting with known perp routers
-                // For now, we'll simulate risk based on having > 5% failed transactions
                 if (tx.isError === '1') {
                     highRiskActivity = true; 
                 }
@@ -69,6 +91,7 @@ async function getEtherscanSignals(walletAddress) {
         }
 
         return {
+            resolvedAddress: walletAddress,
             txCount,
             walletAgeDays,
             uniqueInteractions,
@@ -80,6 +103,7 @@ async function getEtherscanSignals(walletAddress) {
         // Fallback to deterministic mock if API fails
         const num = hashString(walletAddress);
         return {
+            resolvedAddress: walletAddress,
             walletAgeDays: (num % 2000) + 1,
             txCount: (num % 5000) + 1,
             uniqueInteractions: (num % 100) + 1,
@@ -95,18 +119,17 @@ async function determineArchetype(walletAddress) {
     const signals = await getEtherscanSignals(walletAddress);
     let selectedArchetype = null;
 
-    // Very basic scoring logic based on the real signals
+    // Scoring logic based on real signals
     if (signals.txCount === 0) {
-        // Special case: empty wallet
         selectedArchetype = {
             name: 'The Seedling',
             description: 'A blank slate on the ledger. Your journey has yet to begin.',
-            color: '#95A5A6' // Grey
+            color: '#95A5A6'
         };
+    } else if (signals.walletAgeDays > 1000 && signals.txCount > 500) {
+        selectedArchetype = archetypes.find(a => a.id === 'whale_whisperer') || archetypes[0];
     } else if (signals.walletAgeDays > 1000 && signals.txCount < 50) {
         selectedArchetype = archetypes.find(a => a.id === 'diamond_mystic') || archetypes[0];
-    } else if (signals.walletAgeDays > 1000 && signals.txCount > 1000) {
-        selectedArchetype = archetypes.find(a => a.id === 'whale_whisperer') || archetypes[0];
     } else if (signals.txCount > 5000) {
         selectedArchetype = archetypes.find(a => a.id === 'gas_martyr') || archetypes[0];
     } else if (signals.uniqueInteractions > 100) {
@@ -116,7 +139,6 @@ async function determineArchetype(walletAddress) {
     } else if (signals.txCount < 10) {
         selectedArchetype = archetypes.find(a => a.id === 'silent_accumulator') || archetypes[0];
     } else {
-        // Deterministic fallback based on hash if no clear pattern matches
         const num = hashString(walletAddress);
         const index = num % archetypes.length;
         selectedArchetype = archetypes[index];
@@ -138,11 +160,18 @@ async function determineArchetype(walletAddress) {
         archetype: selectedArchetype.name,
         color: selectedArchetype.color,
         reading: `${selectedArchetype.description} ${extraLine}`.trim(),
-        signals // optional, useful for debugging
+        signals,
+        stats: {
+            ageDays: Math.floor(signals.walletAgeDays),
+            txCount: signals.txCount,
+            protocols: signals.uniqueInteractions
+        }
     };
 }
 
 module.exports = {
     determineArchetype,
-    getEtherscanSignals
+    getEtherscanSignals,
+    resolveEns
 };
+

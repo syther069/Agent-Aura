@@ -331,15 +331,79 @@ button {
 
 .result-actions {
     display: flex;
-    gap: 1rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
     justify-content: center;
     width: 100%;
-    max-width: 480px;
+    max-width: 520px;
+    margin: 0 auto;
 }
 
-/* Buttons side-by-side on result page */
 .result-actions button {
-    flex: 1;
+    flex: 1 1 calc(50% - 0.75rem);
+    min-width: 180px;
+}
+
+/* Demo chips styling */
+.demo-chips {
+    margin: 1.2rem 0 1.8rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.demo-chips .micro-label {
+    margin-bottom: 0;
+    margin-right: 0.25rem;
+    opacity: 0.5;
+}
+
+.chip-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    padding: 0.35rem 0.75rem;
+    font-size: 0.75rem;
+    font-family: var(--font-body);
+    font-weight: 500;
+    color: var(--text-color);
+    cursor: pointer;
+    border-radius: 20px;
+    transition: all 0.2s ease;
+    opacity: 0.75;
+}
+
+.chip-btn:hover {
+    opacity: 1;
+    border-color: var(--accent-color);
+    background: rgba(17, 17, 16, 0.04);
+}
+
+/* Toast notification */
+.toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #111110;
+    color: #F7F5F1;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.85rem;
+    font-family: var(--font-body);
+    font-weight: 500;
+    border-radius: 4px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 999;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.toast.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
 }
 
 @media (max-width: 768px) {
@@ -347,7 +411,6 @@ button {
         padding: 1.5rem 1rem;
     }
     .site-title {
-        /* Let the clamp handle scaling, but reduce line-height if needed */
         margin-bottom: 1.5rem;
     }
     .description {
@@ -357,7 +420,7 @@ button {
         padding: 2.5rem 1.25rem;
         border-left: none;
         border-right: none;
-        box-shadow: none; /* Flatten on mobile for cleaner look */
+        box-shadow: none;
     }
     .form-section::before, .form-section::after {
         display: none;
@@ -368,7 +431,12 @@ button {
     .result-actions {
         flex-direction: column;
     }
+    .result-actions button {
+        flex: 1 1 100%;
+        width: 100%;
+    }
     .btn-primary, .btn-secondary {
         padding: 1rem;
     }
 }
+
