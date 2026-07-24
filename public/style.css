@@ -440,3 +440,31 @@ button {
     }
 }
 
+/* AI & Rarity Badges */
+.badge-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.rarity-pill, .trust-pill {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    padding: 0.35rem 0.85rem;
+    border-radius: 100px;
+    text-transform: uppercase;
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    background: rgba(255,255,255,0.6);
+}
+
+.trust-pill {
+    border-color: rgba(17, 17, 16, 0.2);
+    color: rgba(17, 17, 16, 0.75);
+}
+
+

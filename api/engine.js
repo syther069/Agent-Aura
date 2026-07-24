@@ -99,7 +99,7 @@ async function getEtherscanSignals(rawAddress) {
         };
 
     } catch (error) {
-        console.error("Error fetching from Etherscan, falling back to mock:", error.message);
+        console.error("Error fetching from Etherscan, falling back to deterministic oracle:", error.message);
         // Fallback to deterministic mock if API fails
         const num = hashString(walletAddress);
         return {
@@ -110,6 +110,98 @@ async function getEtherscanSignals(rawAddress) {
             highRiskActivity: (num % 10) > 7
         };
     }
+}
+
+/**
+ * Calculate Rarity Tier and Score based on signals
+ */
+function calculateRarity(signals) {
+    const age = signals.walletAgeDays;
+    const txs = signals.txCount;
+    const protocols = signals.uniqueInteractions;
+
+    if (age > 1000 || txs > 3000) {
+        return { tier: 'LEGENDARY', label: 'Top 1% Legendary', percentile: '99th Percentile', badge: 'LEGENDARY AURA' };
+    } else if (protocols > 50 || age > 730 || txs > 1000) {
+        return { tier: 'MYTHIC', label: 'Top 5% Mythic', percentile: '95th Percentile', badge: 'MYTHIC AURA' };
+    } else if (protocols > 20 || age > 365 || txs > 250) {
+        return { tier: 'RARE', label: 'Top 15% Rare', percentile: '85th Percentile', badge: 'RARE AURA' };
+    } else if (txs > 20 || age > 90) {
+        return { tier: 'UNCOMMON', label: 'Uncommon', percentile: '60th Percentile', badge: 'UNCOMMON AURA' };
+    } else {
+        return { tier: 'COMMON', label: 'Genesis', percentile: 'Genesis Tier', badge: 'GENESIS AURA' };
+    }
+}
+
+/**
+ * Calculate Agent-to-Agent (A2A) Trust Score & Risk Rating
+ */
+function calculateAgentTrustScore(signals) {
+    let score = 50; // base score
+
+    // Age bonus (up to 25 pts)
+    score += Math.min(25, Math.floor(signals.walletAgeDays / 40));
+
+    // Tx volume / activity bonus (up to 20 pts)
+    score += Math.min(20, Math.floor(signals.txCount / 100));
+
+    // Protocol diversification bonus (up to 15 pts)
+    score += Math.min(15, Math.floor(signals.uniqueInteractions / 3));
+
+    // High risk penalty
+    if (signals.highRiskActivity) {
+        score -= 10;
+    }
+
+    // Clamp score to 1-99
+    score = Math.max(5, Math.min(99, score));
+
+    let riskLevel = 'LOW';
+    let reputationTier = 'VETERAN';
+
+    if (score < 40) {
+        riskLevel = 'HIGH';
+        reputationTier = 'UNVERIFIED';
+    } else if (score < 70) {
+        riskLevel = 'MEDIUM';
+        reputationTier = 'ESTABLISHED';
+    } else if (score >= 85) {
+        riskLevel = 'LOW';
+        reputationTier = 'WHALE_VETERAN';
+    }
+
+    const ageDaysFormatted = Math.floor(signals.walletAgeDays);
+    const rec = `Agent trust score is ${score}/100 (${riskLevel} risk). Wallet active for ${ageDaysFormatted} days across ${signals.txCount} transactions and ${signals.uniqueInteractions} unique smart contracts.`;
+
+    return {
+        trustScore: score,
+        riskLevel,
+        reputationTier,
+        agentRecommendation: rec
+    };
+}
+
+/**
+ * Dynamic AI Reading Synthesis Engine
+ */
+function generateAiReading(selectedArchetype, signals) {
+    const ageYears = (signals.walletAgeDays / 365).toFixed(1);
+    const ageDays = Math.floor(signals.walletAgeDays);
+
+    let poeticTail = '';
+    if (signals.walletAgeDays > 1000 && signals.txCount > 1000) {
+        poeticTail = `Having navigated ${ageYears} years of chain history across ${signals.txCount} transactions, your footprint is engraved in the genesis blocks.`;
+    } else if (signals.uniqueInteractions > 50) {
+        poeticTail = `With interactions spanning over ${signals.uniqueInteractions} protocols, your spirit wanders freely across liquidity pools.`;
+    } else if (signals.highRiskActivity) {
+        poeticTail = `Having survived contract execution errors and volatility, you walk among the embers of decentralized finance.`;
+    } else if (signals.walletAgeDays > 365) {
+        poeticTail = `With ${ageDays} days of quiet vigilance, you observe the ledger with calculated patience.`;
+    } else {
+        poeticTail = `Your story on the chain is just beginning; every transaction is a line in your digital destiny.`;
+    }
+
+    return `${selectedArchetype.description} ${poeticTail}`.trim();
 }
 
 /**
@@ -144,27 +236,23 @@ async function determineArchetype(walletAddress) {
         selectedArchetype = archetypes[index];
     }
 
-    // Generate flavor text based on real signals
-    let extraLine = '';
-    if (signals.walletAgeDays > 1000) {
-        extraLine = 'The genesis winds have weathered your spirit, yet you remain.';
-    } else if (signals.txCount > 2000) {
-        extraLine = 'A flurry of transactions, a restless soul seeking alpha.';
-    } else if (signals.uniqueInteractions > 50) {
-        extraLine = 'A diversified collector, scattered across the digital wind.';
-    } else if (signals.txCount > 0) {
-        extraLine = 'Quietly observing the chain, waiting for the perfect alignment.';
-    }
+    const reading = generateAiReading(selectedArchetype, signals);
+    const rarity = calculateRarity(signals);
+    const trust = calculateAgentTrustScore(signals);
 
     return {
         archetype: selectedArchetype.name,
         color: selectedArchetype.color,
-        reading: `${selectedArchetype.description} ${extraLine}`.trim(),
+        reading,
         signals,
+        rarity,
+        trust,
         stats: {
             ageDays: Math.floor(signals.walletAgeDays),
             txCount: signals.txCount,
-            protocols: signals.uniqueInteractions
+            protocols: signals.uniqueInteractions,
+            trustScore: trust.trustScore,
+            rarityBadge: rarity.badge
         }
     };
 }
@@ -172,6 +260,7 @@ async function determineArchetype(walletAddress) {
 module.exports = {
     determineArchetype,
     getEtherscanSignals,
-    resolveEns
+    resolveEns,
+    calculateRarity,
+    calculateAgentTrustScore
 };
-

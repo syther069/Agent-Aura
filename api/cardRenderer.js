@@ -9,7 +9,7 @@ function escapeXml(unsafe) {
 }
 
 function generateCardSvg(walletAddress, archetypeData) {
-    const { archetype, color, reading, stats } = archetypeData;
+    const { archetype, color, reading, stats, rarity, trust } = archetypeData;
     
     // Formatting the wallet address as a serial number (e.g. 0xAB...1234)
     const cleanAddress = String(walletAddress || '');
@@ -20,11 +20,13 @@ function generateCardSvg(walletAddress, archetypeData) {
     const safeShortAddress = escapeXml(shortAddress);
     const safeArchetype = escapeXml(archetype);
     const safeColor = escapeXml(color || '#95A5A6');
+    const rarityLabel = escapeXml(rarity?.badge || 'AURA CARD');
+    const trustScoreVal = trust?.trustScore || stats?.trustScore || 85;
     
     const ageText = stats ? `${stats.ageDays}D AGE` : '';
     const txText = stats ? `${stats.txCount} TXS` : '';
-    const protoText = stats ? `${stats.protocols} INTERACTED` : '';
-    const statLine = [ageText, txText, protoText].filter(Boolean).join('  ·  ');
+    const trustText = `TRUST ${trustScoreVal}/100`;
+    const statLine = [ageText, txText, trustText].filter(Boolean).join('  ·  ');
 
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1200" width="800" height="1200">
         <defs>
@@ -35,9 +37,18 @@ function generateCardSvg(walletAddress, archetypeData) {
                 .border-outer { stroke: ${safeColor}; stroke-width: 1; fill: none; opacity: 0.3; }
                 .border-inner { stroke: ${safeColor}; stroke-width: 1; fill: none; opacity: 0.1; }
                 
+                .rarity-pill {
+                    font-family: 'Instrument Sans', sans-serif;
+                    font-size: 11px;
+                    font-weight: 600;
+                    fill: ${safeColor};
+                    letter-spacing: 3px;
+                    text-transform: uppercase;
+                }
+
                 .title {
                     font-family: 'Fraunces', serif;
-                    font-size: 72px;
+                    font-size: 70px;
                     font-weight: 300;
                     fill: #111110;
                     letter-spacing: -2px;
@@ -45,10 +56,10 @@ function generateCardSvg(walletAddress, archetypeData) {
                 
                 .reading {
                     font-family: 'Instrument Sans', sans-serif;
-                    font-size: 25px;
+                    font-size: 24px;
                     font-weight: 400;
                     fill: #111110;
-                    opacity: 0.75;
+                    opacity: 0.78;
                     letter-spacing: 0.3px;
                 }
                 
@@ -69,7 +80,7 @@ function generateCardSvg(walletAddress, archetypeData) {
                     fill: ${safeColor};
                     letter-spacing: 3px;
                     text-transform: uppercase;
-                    opacity: 0.85;
+                    opacity: 0.9;
                 }
 
                 .footer {
@@ -87,7 +98,7 @@ function generateCardSvg(walletAddress, archetypeData) {
             
             <!-- Beautiful subtle aura glow -->
             <radialGradient id="auraGlow" cx="50%" cy="40%" r="50%" fx="50%" fy="40%">
-                <stop offset="0%" stop-color="${safeColor}" stop-opacity="0.14" />
+                <stop offset="0%" stop-color="${safeColor}" stop-opacity="0.15" />
                 <stop offset="50%" stop-color="${safeColor}" stop-opacity="0.05" />
                 <stop offset="100%" stop-color="${safeColor}" stop-opacity="0" />
             </radialGradient>
@@ -113,12 +124,15 @@ function generateCardSvg(walletAddress, archetypeData) {
         <rect class="border-inner" x="42" y="42" width="716" height="1116" />
         
         <!-- Geometric Accent (A tiny diamond at the top) -->
-        <polygon points="400,90 405,100 400,110 395,100" fill="${safeColor}" opacity="0.7"/>
+        <polygon points="400,85 405,95 400,105 395,95" fill="${safeColor}" opacity="0.8"/>
         
         <!-- Header: Serial Number -->
-        <text class="serial" x="400" y="150" text-anchor="middle">NO. ${safeShortAddress}</text>
-        <line class="line" x1="300" y1="190" x2="500" y2="190" />
+        <text class="serial" x="400" y="145" text-anchor="middle">NO. ${safeShortAddress}</text>
+        <line class="line" x1="300" y1="180" x2="500" y2="180" />
         
+        <!-- Rarity Badge -->
+        <text class="rarity-pill" x="400" y="210" text-anchor="middle">✦ ${rarityLabel} ✦</text>
+
         <!-- Main Content (Centered vertically around the glow) -->
         <g transform="translate(0, 480)">
             <!-- Title -->
@@ -126,7 +140,7 @@ function generateCardSvg(walletAddress, archetypeData) {
             
             <!-- Reading Text -->
             <g transform="translate(0, 60)">
-                ${wrapTextSvg(reading, 25, 580, 40, 'reading', 400, 'middle')}
+                ${wrapTextSvg(reading, 24, 580, 38, 'reading', 400, 'middle')}
             </g>
         </g>
         
@@ -172,4 +186,3 @@ function wrapTextSvg(text, fontSize, maxWidth, lineHeight, className, x = 0, tex
 module.exports = {
     generateCardSvg
 };
-

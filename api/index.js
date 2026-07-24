@@ -36,7 +36,7 @@ function getBaseUrl(req) {
     if (process.env.APP_URL) {
         return process.env.APP_URL.replace(/\/$/, '');
     }
-    const host = req.headers['x-forwarded-host'] || req.get('host') || 'agent-aura.onchainos.dev';
+    const host = req.headers['x-forwarded-host'] || req.get('host') || 'agent-aura-7y0s.onrender.com';
     const proto = req.headers['x-forwarded-proto'] || req.protocol || 'https';
     return `${proto}://${host}`;
 }
@@ -65,7 +65,7 @@ function buildDeliverableList(walletAddress, archetypeData, svg, baseUrl) {
         type: 'image/svg+xml',
         media_type: 'image/svg+xml',
         name: `Agent Aura Card - ${walletAddress}`,
-        description: `Web3 Archetype Card for ${walletAddress}: ${archetypeData.archetype}`,
+        description: `Web3 Archetype Card for ${walletAddress}: ${archetypeData.archetype} (${archetypeData.rarity.label})`,
         url: cardUrl,
         data: svgBase64,
         content: svg,
@@ -74,6 +74,8 @@ function buildDeliverableList(walletAddress, archetypeData, svg, baseUrl) {
             archetype: archetypeData.archetype,
             color: archetypeData.color,
             reading: archetypeData.reading,
+            rarity: archetypeData.rarity,
+            trust: archetypeData.trust,
             stats: archetypeData.stats
         }
     };
@@ -92,7 +94,7 @@ function send402Challenge(req, res) {
         error: 'Payment Required',
         resource: {
             url: `${baseUrl}${req.originalUrl || '/aura'}`,
-            description: 'Agent Aura - Web3 Archetype Reader'
+            description: 'Agent Aura - Web3 Archetype Reader & Trust Oracle'
         },
         accepts: [
             {
@@ -126,13 +128,22 @@ app.get(['/.well-known/mcp.json', '/manifest'], (req, res) => {
     const baseUrl = getBaseUrl(req);
     res.json({
         name: "Agent Aura",
-        description: "An on-chain oracle that reads wallet history and reveals unique web3 archetypes as SVG cards.",
-        version: "1.0.0",
+        description: "An on-chain AI oracle that reads wallet history, reveals unique web3 archetypes, and provides Agent-to-Agent trust ratings.",
+        version: "1.2.0",
         services: [
             {
                 serviceName: "Wallet Aura Reader",
                 serviceType: "A2MCP",
                 endpoint: `${baseUrl}/aura`,
+                fee: "0",
+                parameters: {
+                    wallet: "Ethereum wallet address (0x...) or ENS domain (name.eth)"
+                }
+            },
+            {
+                serviceName: "Agent-to-Agent Trust Score Oracle",
+                serviceType: "A2MCP",
+                endpoint: `${baseUrl}/api/agent-trust-score`,
                 fee: "0",
                 parameters: {
                     wallet: "Ethereum wallet address (0x...) or ENS domain (name.eth)"
@@ -185,6 +196,11 @@ async function handleAuraRequest(req, res) {
             wallet_address: walletAddress,
             archetype: archetypeData.archetype,
             reading: archetypeData.reading,
+            rarity: archetypeData.rarity,
+            trust_score: archetypeData.trust.trustScore,
+            risk_level: archetypeData.trust.riskLevel,
+            reputation_tier: archetypeData.trust.reputationTier,
+            agent_recommendation: archetypeData.trust.agentRecommendation,
             card_svg_url: `${baseUrl}/card?wallet=${encodeURIComponent(walletAddress)}`,
             card_image_base64: `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`,
             card_svg: svg,
@@ -203,6 +219,31 @@ async function handleAuraRequest(req, res) {
 
 app.get('/aura', handleAuraRequest);
 app.post('/aura', handleAuraRequest);
+
+/**
+ * Agent-to-Agent (A2A) Trust Score & Reputation Oracle Endpoint
+ */
+app.get(['/api/agent-trust-score', '/trust-score'], async (req, res) => {
+    const rawInput = req.query?.wallet || req.query?.address || DEFAULT_DEMO_WALLET;
+    const walletAddress = sanitizeWalletAddress(rawInput) || DEFAULT_DEMO_WALLET;
+
+    try {
+        const archetypeData = await determineArchetype(walletAddress);
+        res.json({
+            status: 'completed',
+            wallet_address: walletAddress,
+            trust_score: archetypeData.trust.trustScore,
+            risk_level: archetypeData.trust.riskLevel,
+            reputation_tier: archetypeData.trust.reputationTier,
+            agent_recommendation: archetypeData.trust.agentRecommendation,
+            rarity: archetypeData.rarity,
+            signals: archetypeData.signals
+        });
+    } catch (error) {
+        console.error('Error serving agent trust score:', error);
+        res.status(500).json({ error: 'Internal server error processing trust score.' });
+    }
+});
 
 /**
  * Task Deliverable List Endpoints (for direct-accept buyers)
@@ -232,6 +273,9 @@ async function handleDeliverablesRequest(req, res) {
             status: 'completed',
             task_id: rawInput || walletAddress,
             wallet_address: walletAddress,
+            rarity: archetypeData.rarity,
+            trust_score: archetypeData.trust.trustScore,
+            risk_level: archetypeData.trust.riskLevel,
             deliverables: deliverables,
             deliverable_list: deliverables,
             task_deliverables: deliverables,

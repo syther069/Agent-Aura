@@ -45,6 +45,17 @@ document.addEventListener('DOMContentLoaded', () => {
             
             cardImage.src = data.card_image_base64 || data.card_svg_url;
             
+            const rarityBadge = document.getElementById('rarity-badge');
+            const trustBadge = document.getElementById('trust-badge');
+            
+            if (rarityBadge && data.rarity) {
+                rarityBadge.textContent = `✦ ${data.rarity.badge || data.rarity.label || 'RARE AURA'}`;
+            }
+            if (trustBadge && (data.trust_score || data.stats?.trustScore)) {
+                const score = data.trust_score || data.stats?.trustScore;
+                trustBadge.textContent = `🛡️ TRUST ${score}/100`;
+            }
+
             if (data.accent_color) {
                 document.documentElement.style.setProperty('--accent-color', data.accent_color);
             } else {
