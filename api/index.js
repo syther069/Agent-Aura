@@ -27,6 +27,19 @@ app.use(express.static('public')); // Serve static frontend
 
 const X402_PAYTO_ADDRESS = process.env.X402_PAYTO_ADDRESS || '0x4131bdbd97f8f27fb5895bb1dc0cc3ba671555c5';
 const X402_NETWORK = 'eip155:196'; // X Layer Chain ID
+const DEFAULT_DEMO_WALLET = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045';
+
+/**
+ * Dynamically determine the base URL using APP_URL env, host header, or approved domain fallback.
+ */
+function getBaseUrl(req) {
+    if (process.env.APP_URL) {
+        return process.env.APP_URL.replace(/\/$/, '');
+    }
+    const host = req.headers['x-forwarded-host'] || req.get('host') || 'agent-aura.onchainos.dev';
+    const proto = req.headers['x-forwarded-proto'] || req.protocol || 'https';
+    return `${proto}://${host}`;
+}
 
 /**
  * Sanitize and validate wallet address or ENS domain name
@@ -41,15 +54,44 @@ function sanitizeWalletAddress(input) {
 }
 
 /**
+ * Helper to build standardized deliverable objects compliant with ASP / A2MCP / OKX specs
+ */
+function buildDeliverableList(walletAddress, archetypeData, svg, baseUrl) {
+    const svgBase64 = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
+    const cardUrl = `${baseUrl}/card?wallet=${encodeURIComponent(walletAddress)}`;
+
+    const item = {
+        id: `aura-card-${walletAddress}`,
+        type: 'image/svg+xml',
+        media_type: 'image/svg+xml',
+        name: `Agent Aura Card - ${walletAddress}`,
+        description: `Web3 Archetype Card for ${walletAddress}: ${archetypeData.archetype}`,
+        url: cardUrl,
+        data: svgBase64,
+        content: svg,
+        meta: {
+            wallet: walletAddress,
+            archetype: archetypeData.archetype,
+            color: archetypeData.color,
+            reading: archetypeData.reading,
+            stats: archetypeData.stats
+        }
+    };
+
+    return [item];
+}
+
+/**
  * Generate standard HTTP 402 Payment Required challenge compliant with OKX x402 / ERC-8004 specs
  */
 function send402Challenge(req, res) {
+    const baseUrl = getBaseUrl(req);
     const payload = {
         x402Version: 2,
         code: 402,
         error: 'Payment Required',
         resource: {
-            url: `${req.protocol}://${req.get('host') || 'agent-aura-umber.vercel.app'}${req.originalUrl || '/aura'}`,
+            url: `${baseUrl}${req.originalUrl || '/aura'}`,
             description: 'Agent Aura - Web3 Archetype Reader'
         },
         accepts: [
@@ -81,6 +123,7 @@ app.all('/.well-known/x402', (req, res) => send402Challenge(req, res));
  * A2MCP Manifest endpoint for AI Agent Discovery
  */
 app.get(['/.well-known/mcp.json', '/manifest'], (req, res) => {
+    const baseUrl = getBaseUrl(req);
     res.json({
         name: "Agent Aura",
         description: "An on-chain oracle that reads wallet history and reveals unique web3 archetypes as SVG cards.",
@@ -89,7 +132,7 @@ app.get(['/.well-known/mcp.json', '/manifest'], (req, res) => {
             {
                 serviceName: "Wallet Aura Reader",
                 serviceType: "A2MCP",
-                endpoint: `${req.protocol}://${req.get('host') || 'agent-aura-umber.vercel.app'}/aura`,
+                endpoint: `${baseUrl}/aura`,
                 fee: "0",
                 parameters: {
                     wallet: "Ethereum wallet address (0x...) or ENS domain (name.eth)"
@@ -103,7 +146,7 @@ app.get(['/.well-known/mcp.json', '/manifest'], (req, res) => {
  * Handle Aura requests
  */
 async function handleAuraRequest(req, res) {
-    // Check if x402 probe/challenge is requested
+    // Check if explicit x402 probe/challenge is requested
     if (req.query?.check402 === 'true' || req.headers['x-payment-check'] === 'true' || req.headers['x-payment-required'] === 'check') {
         return send402Challenge(req, res);
     }
@@ -127,16 +170,30 @@ async function handleAuraRequest(req, res) {
     try {
         const archetypeData = await determineArchetype(walletAddress);
         const svg = generateCardSvg(walletAddress, archetypeData);
+        const baseUrl = getBaseUrl(req);
+        const deliverables = buildDeliverableList(walletAddress, archetypeData, svg, baseUrl);
         
-        // Return JSON compliant with A2MCP specs
+        // If caller explicitly wants raw SVG (e.g. x402 SVG replay or image request)
+        if (req.headers['accept']?.includes('image/svg+xml') || req.query?.format === 'svg' || req.query?.type === 'svg') {
+            res.setHeader('Content-Type', 'image/svg+xml');
+            return res.send(svg);
+        }
+
+        // Return JSON compliant with A2MCP and Task Deliverable specs
         res.json({
+            status: 'completed',
             wallet_address: walletAddress,
             archetype: archetypeData.archetype,
             reading: archetypeData.reading,
-            card_svg_url: `/card?wallet=${encodeURIComponent(walletAddress)}`,
+            card_svg_url: `${baseUrl}/card?wallet=${encodeURIComponent(walletAddress)}`,
             card_image_base64: `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`,
+            card_svg: svg,
             accent_color: archetypeData.color,
-            stats: archetypeData.stats
+            stats: archetypeData.stats,
+            deliverables: deliverables,
+            deliverable_list: deliverables,
+            task_deliverables: deliverables,
+            deliverable: deliverables[0]
         });
     } catch (error) {
         console.error('Error handling aura request:', error);
@@ -146,6 +203,48 @@ async function handleAuraRequest(req, res) {
 
 app.get('/aura', handleAuraRequest);
 app.post('/aura', handleAuraRequest);
+
+/**
+ * Task Deliverable List Endpoints (for direct-accept buyers)
+ */
+async function handleDeliverablesRequest(req, res) {
+    const rawInput = req.query?.wallet || 
+                      req.query?.address || 
+                      req.query?.walletAddress || 
+                      req.query?.task_id || 
+                      req.query?.taskId || 
+                      req.body?.wallet_address || 
+                      req.body?.wallet || 
+                      req.body?.address || 
+                      req.body?.task_id || 
+                      req.body?.taskId || 
+                      req.params?.taskId;
+
+    const walletAddress = sanitizeWalletAddress(rawInput) || DEFAULT_DEMO_WALLET;
+
+    try {
+        const archetypeData = await determineArchetype(walletAddress);
+        const svg = generateCardSvg(walletAddress, archetypeData);
+        const baseUrl = getBaseUrl(req);
+        const deliverables = buildDeliverableList(walletAddress, archetypeData, svg, baseUrl);
+
+        res.json({
+            status: 'completed',
+            task_id: rawInput || walletAddress,
+            wallet_address: walletAddress,
+            deliverables: deliverables,
+            deliverable_list: deliverables,
+            task_deliverables: deliverables,
+            deliverable: deliverables[0]
+        });
+    } catch (error) {
+        console.error('Error serving deliverables:', error);
+        res.status(500).json({ error: 'Internal server error getting deliverables.' });
+    }
+}
+
+app.get(['/task-deliverable-list', '/task/deliverables', '/deliverables', '/task/:taskId/deliverables', '/task/:taskId'], handleDeliverablesRequest);
+app.post(['/task-deliverable-list', '/task/deliverables', '/deliverables'], handleDeliverablesRequest);
 
 /**
  * Direct SVG endpoint
@@ -171,12 +270,10 @@ app.get('/card', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-if (process.env.NODE_ENV !== 'production') {
+if (!process.env.VERCEL) {
     app.listen(PORT, () => {
         console.log(`Agent Aura API running on port ${PORT}`);
     });
 }
 
 module.exports = app;
-
-
