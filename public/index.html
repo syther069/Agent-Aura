@@ -26,14 +26,14 @@
         
         <div class="nav-right">
             <div class="theme-selector-group" id="theme-selector">
-                <button type="button" class="theme-pill-btn active" data-theme-id="obsidian" title="Obsidian Void Theme">💧 Obsidian</button>
-                <button type="button" class="theme-pill-btn" data-theme-id="sapphire" title="Sapphire Liquid Theme">🌊 Sapphire</button>
-                <button type="button" class="theme-pill-btn" data-theme-id="amethyst" title="Amethyst Liquid Theme">🔮 Amethyst</button>
-                <button type="button" class="theme-pill-btn" data-theme-id="emerald" title="Emerald Liquid Theme">🌿 Emerald</button>
+                <button type="button" class="theme-pill-btn active" data-theme-id="obsidian" title="Obsidian Cyan Theme">Obsidian</button>
+                <button type="button" class="theme-pill-btn" data-theme-id="sapphire" title="Sapphire Teal Theme">Sapphire</button>
+                <button type="button" class="theme-pill-btn" data-theme-id="amethyst" title="Amethyst Hyper-Violet Theme">Amethyst</button>
+                <button type="button" class="theme-pill-btn" data-theme-id="titanium" title="Titanium Ice Theme">Titanium</button>
             </div>
             <div class="status-chip desktop-only">
                 <span class="chip-dot"></span>
-                <span class="chip-val">GROQ LLM ⚡ ACTIVE</span>
+                <span class="chip-val">GROQ LLM ACTIVE</span>
             </div>
             <button type="button" class="btn-connect" id="header-connect-btn">CONNECT WALLET</button>
         </div>
@@ -56,7 +56,10 @@
                         <label for="wallet-input" class="input-micro-label">TARGET ADDRESS OR ENS DOMAIN</label>
                         <input type="text" id="wallet-input" placeholder="0x... or vitalik.eth" required autocomplete="off" spellcheck="false">
                     </div>
-                    <button type="submit" class="btn-reveal">REVEAL AURA →</button>
+                    <button type="submit" class="btn-reveal">
+                        <span>REVEAL AURA</span>
+                        <svg class="btn-svg-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </button>
                 </form>
 
                 <!-- Demo Triggers -->
@@ -180,23 +183,27 @@
                     <!-- Liquid Action Console Section -->
                     <div class="liquid-action-section">
                         <button id="mint-sbt-btn" class="btn-liquid-primary">
-                            <span class="btn-icon">⚡</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
                             <span>MINT SBT ON OKX X LAYER</span>
-                            <span class="btn-arrow">→</span>
+                            <svg class="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                         </button>
                         <div class="liquid-btn-row">
                             <button id="download-btn" class="btn-liquid-secondary">
-                                <span class="btn-icon">📥</span> CARD SVG
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                                <span>CARD SVG</span>
                             </button>
                             <button id="share-x-btn" class="btn-liquid-secondary">
-                                <span class="btn-icon">𝕏</span> SHARE ON X
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                                <span>SHARE ON X</span>
                             </button>
                             <button id="copy-btn" class="btn-liquid-secondary">
-                                <span class="btn-icon">🔗</span> COPY LINK
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                                <span>COPY LINK</span>
                             </button>
                         </div>
                         <button id="reset-btn" class="btn-liquid-ghost">
-                            <span>↺ ANALYZE ANOTHER WALLET</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                            <span>ANALYZE ANOTHER WALLET</span>
                         </button>
                     </div>
                 </div>

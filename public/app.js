@@ -49,6 +49,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // 💧 Dynamic Liquid Click Ripple Wave Physics
+    document.addEventListener('click', (e) => {
+        const targetBtn = e.target.closest('button, .chip-btn, .theme-pill-btn');
+        if (!targetBtn) return;
+
+        const rect = targetBtn.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+
+        const ripple = document.createElement('span');
+        ripple.className = 'liquid-ripple';
+        ripple.style.width = ripple.style.height = `${size}px`;
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+
+        targetBtn.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 650);
+    });
+
     // 🌊 Interactive Liquid Glass Container Spotlight Physics
     const glassContainers = document.querySelectorAll('.glass-search-container, .fame-card, .liquid-console-wrapper, .loading-glass-card');
     glassContainers.forEach(container => {
