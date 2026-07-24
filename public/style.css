@@ -2,9 +2,9 @@
    AGENT AURA — PREMIUM DARK LIQUID GLASS UI DESIGN SYSTEM
    ========================================================================== */
 
-/* Theme 1: Obsidian Platinum (Default) */
+/* Theme 1: Espresso Obsidian (Default) */
 :root, :root[data-theme="obsidian"] {
-    --bg-main: #000000;
+    --bg-main: #0F0D0C;
     --glass-bg: rgba(255, 255, 255, 0.045);
     --glass-bg-hover: rgba(255, 255, 255, 0.09);
     --glass-border: rgba(255, 255, 255, 0.14);
@@ -27,7 +27,7 @@
 
 /* Theme 2: Graphite Obsidian */
 :root[data-theme="sapphire"], :root[data-theme="graphite"] {
-    --bg-main: #000000;
+    --bg-main: #141210;
     --glass-bg: rgba(255, 255, 255, 0.05);
     --glass-bg-hover: rgba(255, 255, 255, 0.10);
     --glass-border: rgba(226, 232, 240, 0.16);
@@ -47,7 +47,7 @@
 
 /* Theme 3: Platinum Onyx */
 :root[data-theme="amethyst"], :root[data-theme="platinum"] {
-    --bg-main: #000000;
+    --bg-main: #0D0B0A;
     --glass-bg: rgba(255, 255, 255, 0.055);
     --glass-bg-hover: rgba(255, 255, 255, 0.11);
     --glass-border: rgba(255, 255, 255, 0.18);
@@ -67,7 +67,7 @@
 
 /* Theme 4: Abyssal Ice */
 :root[data-theme="titanium"], :root[data-theme="abyssal"] {
-    --bg-main: #000000;
+    --bg-main: #0C0A0A;
     --glass-bg: rgba(240, 249, 255, 0.045);
     --glass-bg-hover: rgba(240, 249, 255, 0.095);
     --glass-border: rgba(186, 230, 253, 0.16);
