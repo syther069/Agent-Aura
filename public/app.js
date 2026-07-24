@@ -83,17 +83,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const trustBadge = document.getElementById('trust-badge');
             
             if (rarityBadge && data.rarity) {
-                rarityBadge.textContent = `✦ ${data.rarity.badge || data.rarity.label || 'RARE AURA'}`;
+                rarityBadge.textContent = `◇ ${data.rarity.badge || data.rarity.label || 'RARE AURA'} ◇`;
             }
             if (trustBadge && (data.trust_score || data.stats?.trustScore)) {
                 const score = data.trust_score || data.stats?.trustScore;
-                trustBadge.textContent = `🛡️ TRUST ${score}/100`;
-            }
-
-            if (data.accent_color) {
-                document.documentElement.style.setProperty('--emerald', data.accent_color);
-            } else {
-                document.documentElement.style.setProperty('--emerald', '#10B981');
+                trustBadge.textContent = `TRUST SCORE ${score}/100`;
             }
 
             setTimeout(() => {
@@ -124,7 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
         input.value = '';
         currentResultData = null;
         currentWallet = '';
-        document.documentElement.style.setProperty('--emerald', '#10B981');
         switchState('state-form');
     });
 

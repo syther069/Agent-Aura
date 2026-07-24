@@ -9,7 +9,7 @@ function escapeXml(unsafe) {
 }
 
 function generateCardSvg(walletAddress, archetypeData) {
-    const { archetype, color, bgColor, glowColor, reading, stats, rarity, trust } = archetypeData;
+    const { archetype, color, reading, stats, rarity, trust } = archetypeData;
     
     // Formatting wallet address as a serial number
     const cleanAddress = String(walletAddress || '');
@@ -19,65 +19,64 @@ function generateCardSvg(walletAddress, archetypeData) {
 
     const safeShortAddress = escapeXml(shortAddress).toUpperCase();
     const safeArchetype = escapeXml(archetype);
-    const safeColor = escapeXml(color || '#10B981');
-    const safeBgColor = escapeXml(bgColor || '#0A0D12');
-    const safeGlowColor = escapeXml(glowColor || safeColor);
+    const safeColor = escapeXml(color || '#111110');
     const rarityLabel = escapeXml(rarity?.badge || 'RARE AURA').toUpperCase();
     const trustScoreVal = trust?.trustScore || stats?.trustScore || 85;
     
     const ageText = stats ? `${stats.ageDays}D AGE` : '';
     const txText = stats ? `${stats.txCount} TXS` : '';
-    const xLayerBadge = stats?.xLayerActive ? 'OKX X-LAYER' : '';
+    const xLayerBadge = stats?.xLayerActive ? 'OKX X-LAYER' : 'ETH MAINNET';
     const trustText = `TRUST ${trustScoreVal}/100`;
-    const statLine = [ageText, txText, xLayerBadge, trustText].filter(Boolean).join('  ·  ');
+    const statLine = [ageText, txText, xLayerBadge, trustText].filter(Boolean).join('   ·   ');
 
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1200" width="800" height="1200">
         <defs>
             <style>
-                @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap');
+                @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap');
                 
-                .bg { fill: ${safeBgColor}; }
-                .border-outer { stroke: ${safeColor}; stroke-width: 1.5; fill: none; opacity: 0.35; }
-                .border-inner { stroke: #1F2937; stroke-width: 1; fill: none; opacity: 0.6; }
+                .bg { fill: #F7F5F1; }
+                .border-outer { stroke: ${safeColor}; stroke-width: 1.5; fill: none; opacity: 0.8; }
+                .border-inner { stroke: ${safeColor}; stroke-width: 1; fill: none; opacity: 0.2; }
                 
                 .serial {
-                    font-family: 'Inter', sans-serif;
+                    font-family: 'IBM Plex Mono', monospace;
                     font-size: 14px;
-                    font-weight: 600;
-                    fill: #9CA3AF;
+                    font-weight: 500;
+                    fill: #111110;
                     letter-spacing: 5px;
                     text-transform: uppercase;
+                    opacity: 0.65;
                 }
                 
                 .rarity-pill {
-                    font-family: 'Inter', sans-serif;
+                    font-family: 'IBM Plex Mono', monospace;
                     font-size: 11px;
-                    font-weight: 700;
+                    font-weight: 600;
                     fill: ${safeColor};
                     letter-spacing: 3px;
                     text-transform: uppercase;
                 }
 
                 .title {
-                    font-family: 'Outfit', sans-serif;
-                    font-size: 64px;
-                    font-weight: 700;
-                    fill: #FFFFFF;
-                    letter-spacing: -1.5px;
+                    font-family: 'Fraunces', serif;
+                    font-size: 72px;
+                    font-weight: 300;
+                    fill: #111110;
+                    letter-spacing: -2px;
                 }
                 
                 .reading {
-                    font-family: 'Inter', sans-serif;
-                    font-size: 23px;
+                    font-family: 'IBM Plex Mono', monospace;
+                    font-size: 21px;
                     font-weight: 400;
-                    fill: #E5E7EB;
-                    opacity: 0.88;
-                    line-height: 1.5;
+                    fill: #171513;
+                    opacity: 0.82;
+                    line-height: 1.6;
                 }
                 
                 .stats-bar {
-                    font-family: 'Inter', sans-serif;
-                    font-size: 13px;
+                    font-family: 'IBM Plex Mono', monospace;
+                    font-size: 12px;
                     font-weight: 600;
                     fill: ${safeColor};
                     letter-spacing: 2.5px;
@@ -85,45 +84,54 @@ function generateCardSvg(walletAddress, archetypeData) {
                 }
 
                 .footer {
-                    font-family: 'Inter', sans-serif;
-                    font-size: 13px;
+                    font-family: 'IBM Plex Mono', monospace;
+                    font-size: 12px;
                     font-weight: 500;
-                    fill: #6B7280;
+                    fill: #111110;
+                    opacity: 0.4;
                     letter-spacing: 4px;
                     text-transform: uppercase;
                 }
                 
-                .line { stroke: #1F2937; stroke-width: 1; opacity: 0.8; }
+                .line { stroke: #111110; stroke-width: 1; opacity: 0.15; }
             </style>
             
-            <!-- Soft Dynamic Glow -->
-            <radialGradient id="cardGlow" cx="50%" cy="38%" r="60%" fx="50%" fy="38%">
-                <stop offset="0%" stop-color="${safeGlowColor}" stop-opacity="0.22" />
-                <stop offset="50%" stop-color="${safeGlowColor}" stop-opacity="0.06" />
-                <stop offset="100%" stop-color="${safeGlowColor}" stop-opacity="0" />
+            <!-- Soft Dynamic Aura Glow -->
+            <radialGradient id="auraGlow" cx="50%" cy="40%" r="55%" fx="50%" fy="40%">
+                <stop offset="0%" stop-color="${safeColor}" stop-opacity="0.18" />
+                <stop offset="60%" stop-color="${safeColor}" stop-opacity="0.04" />
+                <stop offset="100%" stop-color="${safeColor}" stop-opacity="0" />
             </radialGradient>
+            
+            <!-- Paper Noise Texture Filter -->
+            <filter id="paperNoise">
+                <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" stitchTiles="stitch"/>
+                <feColorMatrix type="matrix" values="1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 0.045 0" />
+            </filter>
         </defs>
 
-        <!-- Base Dark Background -->
+        <!-- Base Alabaster Paper Background -->
         <rect class="bg" width="100%" height="100%" />
         
+        <!-- Subtle Paper Noise Texture -->
+        <rect width="100%" height="100%" style="pointer-events:none;" filter="url(#paperNoise)" />
+
         <!-- Aura Glow -->
-        <circle cx="400" cy="450" r="520" fill="url(#cardGlow)" />
+        <circle cx="400" cy="450" r="520" fill="url(#auraGlow)" />
         
-        <!-- Elegant Outer & Inner Borders -->
-        <rect class="border-outer" x="35" y="35" width="730" height="1130" rx="12" />
-        <rect class="border-inner" x="48" y="48" width="704" height="1104" rx="8" />
+        <!-- Architectural Borders -->
+        <rect class="border-outer" x="35" y="35" width="730" height="1130" />
+        <rect class="border-inner" x="47" y="47" width="706" height="1106" />
         
-        <!-- Diamond Geometric Accent -->
-        <polygon points="400,85 405,95 400,105 395,95" fill="${safeColor}" opacity="0.85"/>
+        <!-- Diamond Geometric Accent (◇) -->
+        <polygon points="400,85 406,96 400,107 394,96" fill="${safeColor}" opacity="0.9"/>
         
         <!-- Header: Serial Number -->
         <text class="serial" x="400" y="145" text-anchor="middle">NO. ${safeShortAddress}</text>
         <line class="line" x1="280" y1="180" x2="520" y2="180" />
         
-        <!-- Rarity Badge -->
-        <rect x="250" y="202" width="300" height="32" rx="16" fill="#111827" stroke="${safeColor}" stroke-width="1" stroke-opacity="0.5"/>
-        <text class="rarity-pill" x="400" y="223" text-anchor="middle">✦ ${rarityLabel} ✦</text>
+        <!-- Rarity Tag -->
+        <text class="rarity-pill" x="400" y="215" text-anchor="middle">◇ ${rarityLabel} ◇</text>
 
         <!-- Main Content -->
         <g transform="translate(0, 480)">
@@ -131,20 +139,21 @@ function generateCardSvg(walletAddress, archetypeData) {
             <text class="title" x="400" y="0" text-anchor="middle">${safeArchetype}</text>
             
             <!-- Reading Text Box -->
-            <g transform="translate(0, 65)">
-                ${wrapTextSvg(reading, 23, 580, 38, 'reading', 400, 'middle')}
+            <g transform="translate(0, 70)">
+                ${wrapTextSvg(reading, 21, 580, 36, 'reading', 400, 'middle')}
             </g>
         </g>
         
         <!-- Stat Pills / Signals Bar -->
-        <rect x="65" y="915" width="670" height="44" rx="22" fill="#111827" stroke="#1F2937" stroke-width="1"/>
+        <line class="line" x1="120" y1="915" x2="680" y2="915" />
         ${statLine ? `<text class="stats-bar" x="400" y="942" text-anchor="middle">${escapeXml(statLine)}</text>` : ''}
+        <line class="line" x1="120" y1="965" x2="680" y2="965" />
 
         <!-- Bottom Line -->
         <line class="line" x1="340" y1="1020" x2="460" y2="1020" />
         
         <!-- Footer / CTA -->
-        <text class="footer" x="400" y="1080" text-anchor="middle">SOULBOUND ON-CHAIN AURA · OKX X-LAYER</text>
+        <text class="footer" x="400" y="1080" text-anchor="middle">REVEALED ON-CHAIN · OKX X-LAYER · AGENT AURA</text>
         
     </svg>`;
 }
@@ -157,7 +166,7 @@ function wrapTextSvg(text, fontSize, maxWidth, lineHeight, className, x = 0, tex
     let lines = [];
     let currentLine = '';
     
-    const charWidth = fontSize * 0.45; 
+    const charWidth = fontSize * 0.5; 
     const maxChars = Math.floor(maxWidth / charWidth);
 
     words.forEach(word => {
