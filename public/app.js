@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetBtn = document.getElementById('reset-btn');
     const toast = document.getElementById('toast');
     const chipBtns = document.querySelectorAll('.chip-btn');
+    const headerConnectBtn = document.getElementById('header-connect-btn');
+    const networkStatus = document.getElementById('network-status');
 
     let currentResultData = null;
     let currentWallet = '';
@@ -34,6 +36,35 @@ document.addEventListener('DOMContentLoaded', () => {
             el.classList.remove('active');
         });
         document.getElementById(stateId).classList.add('active');
+    }
+
+    async function connectWallet() {
+        const provider = window.okxwallet?.ethereum || window.okxwallet || window.ethereum;
+        if (!provider) {
+            showToast('OKX Wallet extension not detected! Please install OKX Wallet.');
+            window.open('https://www.okx.com/web3', '_blank');
+            return null;
+        }
+
+        try {
+            const accounts = await provider.request({ method: 'eth_requestAccounts' });
+            if (accounts.length > 0) {
+                const addr = accounts[0];
+                const shortAddr = `${addr.substring(0, 6)}...${addr.substring(addr.length - 4)}`;
+                if (headerConnectBtn) headerConnectBtn.textContent = shortAddr;
+                if (networkStatus) networkStatus.textContent = 'X LAYER CONNECTED';
+                showToast(`OKX Wallet Connected: ${shortAddr}`);
+                return addr;
+            }
+        } catch (err) {
+            console.error(err);
+            showToast('Wallet connection cancelled.');
+        }
+        return null;
+    }
+
+    if (headerConnectBtn) {
+        headerConnectBtn.addEventListener('click', () => connectWallet());
     }
 
     async function fetchAura(wallet) {
@@ -62,9 +93,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (data.accent_color) {
-                document.documentElement.style.setProperty('--accent-color', data.accent_color);
+                document.documentElement.style.setProperty('--cyber-lime', data.accent_color);
             } else {
-                document.documentElement.style.setProperty('--accent-color', '#171512');
+                document.documentElement.style.setProperty('--cyber-lime', '#A3E635');
             }
 
             setTimeout(() => {
@@ -95,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         input.value = '';
         currentResultData = null;
         currentWallet = '';
-        document.documentElement.style.setProperty('--accent-color', '#171512');
+        document.documentElement.style.setProperty('--cyber-lime', '#A3E635');
         switchState('state-form');
     });
 
@@ -115,6 +146,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const connectedAccount = accounts[0];
                 if (!connectedAccount) {
                     throw new Error('No account returned from OKX Wallet.');
+                }
+
+                if (headerConnectBtn) {
+                    headerConnectBtn.textContent = `${connectedAccount.substring(0, 6)}...${connectedAccount.substring(connectedAccount.length - 4)}`;
                 }
 
                 // Switch network to OKX X Layer (Chain ID 196 = 0x84)

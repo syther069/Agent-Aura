@@ -3,72 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agent Aura — Reveal Your On-Chain Personality</title>
+    <title>AGENT AURA — On-Chain Behavioral Oracle / X Layer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <div class="container" id="app">
+    <!-- Cyber Terminal Header -->
+    <header class="top-nav">
+        <div class="nav-brand">
+            <div class="brand-logo">
+                <span class="pulse-dot"></span>
+                <span class="brand-title">AGENT AURA</span>
+            </div>
+            <span class="chain-tag">X LAYER / CHAIN 196</span>
+        </div>
         
-        <!-- Default State: Form -->
+        <div class="nav-right">
+            <div class="status-chip">
+                <span class="chip-label">ORACLE:</span>
+                <span class="chip-val">GROQ LLM ⚡</span>
+            </div>
+            <div class="status-chip desktop-only">
+                <span class="chip-label">CONNECTED TO:</span>
+                <span class="chip-val" id="network-status">X LAYER MAINNET</span>
+            </div>
+            <button type="button" class="btn-connect" id="header-connect-btn">CONNECT WALLET</button>
+        </div>
+    </header>
+
+    <div class="main-layout" id="app">
+        
+        <!-- Hero Section -->
+        <div class="hero-banner">
+            <span class="sub-header">// ON-CHAIN BEHAVIORAL INTELLIGENCE / X LAYER MAINNET</span>
+            <h1 class="hero-title">AGENT MARKETS READY FOR LIVE REVELATION.</h1>
+            <p class="hero-desc">
+                Agent Aura extracts on-chain signals, surfaces your web3 archetype, and lets agents evaluate trust or mint soulbound cards directly with native OKB on X Layer.
+            </p>
+        </div>
+
+        <!-- Default State: Form Terminal -->
         <main class="state-form active" id="state-form">
-            <header>
-                <h1 class="site-title">Agent Aura</h1>
-            </header>
-            
-            <section class="form-section">
-                <p class="description">A single call to reveal your on-chain personality.<br>No signatures, no risk, just your aura.</p>
+            <div class="terminal-card">
+                <div class="corner-tick top-left">+</div>
+                <div class="corner-tick top-right">+</div>
+                <div class="corner-tick bottom-left">+</div>
+                <div class="corner-tick bottom-right">+</div>
+                
+                <header class="card-header">
+                    <span class="terminal-tag">// INPUT TARGET ADDRESS</span>
+                    <span class="terminal-mode">MODE: ON-CHAIN SCAN</span>
+                </header>
+
                 <form id="aura-form">
                     <div class="input-group">
-                        <label for="wallet-input" class="micro-label">ENTER WALLET ADDRESS OR ENS</label>
+                        <label for="wallet-input" class="micro-label">ENTER WALLET ADDRESS OR ENS DOMAIN</label>
                         <input type="text" id="wallet-input" placeholder="0x... or vitalik.eth" required autocomplete="off" spellcheck="false">
                     </div>
+                    
                     <div class="demo-chips">
-                        <span class="micro-label">TRY DEMO:</span>
+                        <span class="micro-label">TRY DEMO TARGETS:</span>
                         <button type="button" class="chip-btn" data-wallet="vitalik.eth">⚡ vitalik.eth</button>
                         <button type="button" class="chip-btn" data-wallet="0x28c6c06298d514db089934071355e5743bf21d60">🌾 Binance Hot</button>
                         <button type="button" class="chip-btn" data-wallet="0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045">🐋 OG Whale</button>
                     </div>
-                    <button type="submit" class="btn-primary">Reveal My Aura</button>
+
+                    <button type="submit" class="btn-primary">REVEAL MY AURA ⚡</button>
                 </form>
-            </section>
+            </div>
         </main>
 
         <!-- Loading State -->
         <main class="state-loading" id="state-loading">
-            <div class="loader">
-                <p class="reading-text">Reading on-chain signals...</p>
+            <div class="loader-terminal">
+                <div class="corner-tick top-left">+</div>
+                <div class="corner-tick top-right">+</div>
+                <div class="spinner-ring"></div>
+                <p class="reading-text">// SCANNING ON-CHAIN SIGNALS ON X LAYER...</p>
                 <div class="progress-line"></div>
             </div>
         </main>
 
         <!-- Result State -->
         <main class="state-result" id="state-result">
-            <header class="result-header">
-                <h2 class="micro-label">YOUR AURA CARD</h2>
-                <div class="badge-row" id="badge-row">
-                    <span class="rarity-pill" id="rarity-badge">✦ LEGENDARY AURA</span>
-                    <span class="trust-pill" id="trust-badge">🛡️ TRUST SCORE 95/100</span>
+            <div class="result-layout">
+                <header class="result-header">
+                    <div class="header-titles">
+                        <span class="sub-header">// REVEALED ON-CHAIN AURA CARD</span>
+                        <h2 class="result-title">SOULBOUND CARD GENERATED.</h2>
+                    </div>
+                    <div class="badge-row" id="badge-row">
+                        <span class="rarity-pill" id="rarity-badge">✦ LEGENDARY AURA</span>
+                        <span class="trust-pill" id="trust-badge">🛡️ TRUST SCORE 95/100</span>
+                    </div>
+                </header>
+                
+                <div class="card-frame">
+                    <div class="corner-tick top-left">+</div>
+                    <div class="corner-tick top-right">+</div>
+                    <div class="corner-tick bottom-left">+</div>
+                    <div class="corner-tick bottom-right">+</div>
+                    <img id="card-image" src="" alt="Agent Aura Card">
                 </div>
-            </header>
-            
-            <div class="card-container">
-                <img id="card-image" src="" alt="Your Aura Card">
-            </div>
-            
-            <div class="result-actions">
-                <button id="mint-sbt-btn" class="btn-primary result-btn">Mint SBT on X Layer ⚡</button>
-                <button id="download-btn" class="btn-secondary">Download SVG</button>
-                <button id="share-x-btn" class="btn-secondary">Share on X</button>
-                <button id="copy-btn" class="btn-secondary">Copy Link</button>
-                <button id="reset-btn" class="btn-secondary">Try Another Wallet</button>
+                
+                <div class="result-actions">
+                    <button id="mint-sbt-btn" class="btn-primary">MINT SBT ON X LAYER ⚡</button>
+                    <button id="download-btn" class="btn-secondary">DOWNLOAD SVG</button>
+                    <button id="share-x-btn" class="btn-secondary">SHARE ON X</button>
+                    <button id="copy-btn" class="btn-secondary">COPY LINK</button>
+                    <button id="reset-btn" class="btn-secondary">TRY ANOTHER WALLET</button>
+                </div>
             </div>
         </main>
 
     </div>
 
+    <!-- Toast Notification -->
     <div id="toast" class="toast"></div>
 
     <script src="/app.js"></script>

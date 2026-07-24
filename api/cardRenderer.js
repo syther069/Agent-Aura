@@ -9,7 +9,7 @@ function escapeXml(unsafe) {
 }
 
 function generateCardSvg(walletAddress, archetypeData) {
-    const { archetype, color, bgColor, glowColor, themeName, reading, stats, rarity, trust } = archetypeData;
+    const { archetype, color, bgColor, glowColor, reading, stats, rarity, trust } = archetypeData;
     
     // Formatting the wallet address as a serial number (e.g. 0xAB...1234)
     const cleanAddress = String(walletAddress || '');
@@ -17,144 +17,164 @@ function generateCardSvg(walletAddress, archetypeData) {
         ? `${cleanAddress.substring(0, 6)}...${cleanAddress.substring(cleanAddress.length - 4)}`
         : cleanAddress;
 
-    const safeShortAddress = escapeXml(shortAddress);
+    const safeShortAddress = escapeXml(shortAddress).toUpperCase();
     const safeArchetype = escapeXml(archetype);
-    const safeColor = escapeXml(color || '#10B981');
-    const safeBgColor = escapeXml(bgColor || '#0B1310');
+    const safeColor = escapeXml(color || '#A3E635');
+    const safeBgColor = escapeXml(bgColor || '#080A0D');
     const safeGlowColor = escapeXml(glowColor || safeColor);
-    const rarityLabel = escapeXml(rarity?.badge || 'AURA CARD');
+    const rarityLabel = escapeXml(rarity?.badge || 'RARE AURA').toUpperCase();
     const trustScoreVal = trust?.trustScore || stats?.trustScore || 85;
     
-    const ageText = stats ? `${stats.ageDays}D AGE` : '';
-    const txText = stats ? `${stats.txCount} TXS` : '';
-    const xLayerBadge = stats?.xLayerActive ? 'OKX X-LAYER' : '';
-    const trustText = `TRUST ${trustScoreVal}/100`;
-    const statLine = [ageText, txText, xLayerBadge, trustText].filter(Boolean).join('  ·  ');
+    const ageText = stats ? `AGE: ${stats.ageDays}D` : '';
+    const txText = stats ? `TXS: ${stats.txCount}` : '';
+    const xLayerBadge = stats?.xLayerActive ? 'X-LAYER: ACTIVE' : 'CHAIN: ETH MAINNET';
+    const trustText = `TRUST: ${trustScoreVal}/100`;
+    const statLine = [ageText, txText, xLayerBadge, trustText].filter(Boolean).join('  //  ');
 
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1200" width="800" height="1200">
         <defs>
             <style>
-                @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&amp;family=Instrument+Sans:wght@400;500;600&amp;display=swap');
+                @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
                 
                 .bg { fill: ${safeBgColor}; }
-                .border-outer { stroke: ${safeColor}; stroke-width: 1.5; fill: none; opacity: 0.4; }
-                .border-inner { stroke: ${safeColor}; stroke-width: 1; fill: none; opacity: 0.15; }
+                .border-main { stroke: ${safeColor}; stroke-width: 1.5; fill: none; opacity: 0.5; }
+                .border-sub { stroke: #1E232B; stroke-width: 1; fill: none; }
+                .grid-line { stroke: #1E232B; stroke-width: 1; stroke-dasharray: 4 4; opacity: 0.4; }
+                
+                .corner-tick {
+                    font-family: 'JetBrains Mono', monospace;
+                    font-size: 16px;
+                    font-weight: 700;
+                    fill: ${safeColor};
+                    opacity: 0.8;
+                }
+
+                .header-tag {
+                    font-family: 'JetBrains Mono', monospace;
+                    font-size: 12px;
+                    font-weight: 600;
+                    fill: ${safeColor};
+                    letter-spacing: 4px;
+                    text-transform: uppercase;
+                }
+
+                .serial {
+                    font-family: 'JetBrains Mono', monospace;
+                    font-size: 15px;
+                    font-weight: 600;
+                    fill: #9CA3AF;
+                    letter-spacing: 5px;
+                    text-transform: uppercase;
+                }
                 
                 .rarity-pill {
-                    font-family: 'Instrument Sans', sans-serif;
+                    font-family: 'JetBrains Mono', monospace;
                     font-size: 11px;
-                    font-weight: 600;
+                    font-weight: 700;
                     fill: ${safeColor};
                     letter-spacing: 3px;
                     text-transform: uppercase;
                 }
 
                 .title {
-                    font-family: 'Fraunces', serif;
-                    font-size: 68px;
-                    font-weight: 300;
+                    font-family: 'Space Grotesk', sans-serif;
+                    font-size: 64px;
+                    font-weight: 700;
                     fill: #FFFFFF;
-                    letter-spacing: -2px;
+                    letter-spacing: -1.5px;
                 }
                 
                 .reading {
-                    font-family: 'Instrument Sans', sans-serif;
-                    font-size: 24px;
+                    font-family: 'Space Grotesk', sans-serif;
+                    font-size: 23px;
                     font-weight: 400;
-                    fill: #E5E7EB;
-                    opacity: 0.85;
-                    letter-spacing: 0.3px;
-                }
-                
-                .serial {
-                    font-family: 'Instrument Sans', sans-serif;
-                    font-size: 16px;
-                    font-weight: 600;
-                    fill: #9CA3AF;
-                    letter-spacing: 6px;
-                    text-transform: uppercase;
-                    opacity: 0.7;
+                    fill: #D1D5DB;
+                    opacity: 0.88;
+                    line-height: 1.5;
                 }
                 
                 .stats-bar {
-                    font-family: 'Instrument Sans', sans-serif;
+                    font-family: 'JetBrains Mono', monospace;
                     font-size: 13px;
                     font-weight: 600;
                     fill: ${safeColor};
-                    letter-spacing: 3px;
+                    letter-spacing: 2.5px;
                     text-transform: uppercase;
-                    opacity: 0.95;
                 }
 
                 .footer {
-                    font-family: 'Instrument Sans', sans-serif;
-                    font-size: 14px;
+                    font-family: 'JetBrains Mono', monospace;
+                    font-size: 12px;
                     font-weight: 500;
                     fill: #6B7280;
-                    opacity: 0.6;
                     letter-spacing: 4px;
                     text-transform: uppercase;
                 }
-                
-                .line { stroke: ${safeColor}; stroke-width: 1; opacity: 0.2; }
             </style>
             
-            <!-- Dynamic Theme Aura Glow -->
-            <radialGradient id="auraGlow" cx="50%" cy="40%" r="55%" fx="50%" fy="40%">
-                <stop offset="0%" stop-color="${safeGlowColor}" stop-opacity="0.32" />
-                <stop offset="50%" stop-color="${safeGlowColor}" stop-opacity="0.10" />
+            <!-- Dynamic Matrix Glow -->
+            <radialGradient id="matrixGlow" cx="50%" cy="40%" r="60%" fx="50%" fy="40%">
+                <stop offset="0%" stop-color="${safeGlowColor}" stop-opacity="0.25" />
+                <stop offset="50%" stop-color="${safeGlowColor}" stop-opacity="0.08" />
                 <stop offset="100%" stop-color="${safeGlowColor}" stop-opacity="0" />
             </radialGradient>
-            
-            <!-- Noise filter for paper texture -->
-            <filter id="noise">
-                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
-                <feColorMatrix type="matrix" values="1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 0.04 0" />
-            </filter>
+
+            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1E232B" stroke-width="0.8" opacity="0.3"/>
+            </pattern>
         </defs>
 
-        <!-- Base Background -->
+        <!-- Base Dark Background -->
         <rect class="bg" width="100%" height="100%" />
         
-        <!-- The Dynamic Aura Glow -->
-        <circle cx="400" cy="460" r="520" fill="url(#auraGlow)" />
+        <!-- Grid Pattern Overlay -->
+        <rect width="100%" height="100%" fill="url(#grid)" />
 
-        <!-- Noise Texture -->
-        <rect width="100%" height="100%" style="pointer-events:none;" filter="url(#noise)" />
+        <!-- Radial Aura Glow -->
+        <circle cx="400" cy="460" r="540" fill="url(#matrixGlow)" />
         
-        <!-- Borders -->
-        <rect class="border-outer" x="30" y="30" width="740" height="1140" />
-        <rect class="border-inner" x="42" y="42" width="716" height="1116" />
+        <!-- Technical Outer & Inner Borders -->
+        <rect class="border-main" x="35" y="35" width="730" height="1130" />
+        <rect class="border-sub" x="47" y="47" width="706" height="1106" />
         
-        <!-- Geometric Accent (Diamond at the top) -->
-        <polygon points="400,85 406,96 400,107 394,96" fill="${safeColor}" opacity="0.9"/>
+        <!-- Corner Crosshairs (+) -->
+        <text class="corner-tick" x="42" y="58" text-anchor="start">+</text>
+        <text class="corner-tick" x="758" y="58" text-anchor="end">+</text>
+        <text class="corner-tick" x="42" y="1150" text-anchor="start">+</text>
+        <text class="corner-tick" x="758" y="1150" text-anchor="end">+</text>
         
-        <!-- Header: Serial Number -->
-        <text class="serial" x="400" y="145" text-anchor="middle">NO. ${safeShortAddress}</text>
-        <line class="line" x1="280" y1="180" x2="520" y2="180" />
+        <!-- Top Terminal Header -->
+        <text class="header-tag" x="400" y="95" text-anchor="middle">// AGENT AURA ORACLE / X LAYER 196</text>
+        <line class="grid-line" x1="80" y1="115" x2="720" y2="115" />
         
-        <!-- Rarity Badge -->
-        <text class="rarity-pill" x="400" y="212" text-anchor="middle">✦ ${rarityLabel} ✦</text>
+        <!-- Serial Number -->
+        <text class="serial" x="400" y="155" text-anchor="middle">SERIAL: ${safeShortAddress}</text>
+        <line class="grid-line" x1="280" y1="185" x2="520" y2="185" />
+        
+        <!-- Rarity Badge Box -->
+        <rect x="250" y="205" width="300" height="32" rx="4" fill="#111318" stroke="${safeColor}" stroke-width="1" opacity="0.9"/>
+        <text class="rarity-pill" x="400" y="226" text-anchor="middle">✦ ${rarityLabel} ✦</text>
 
         <!-- Main Content -->
         <g transform="translate(0, 480)">
             <!-- Title -->
             <text class="title" x="400" y="0" text-anchor="middle">${safeArchetype}</text>
             
-            <!-- Reading Text -->
-            <g transform="translate(0, 60)">
-                ${wrapTextSvg(reading, 24, 580, 38, 'reading', 400, 'middle')}
+            <!-- Reading Text Box -->
+            <g transform="translate(0, 65)">
+                ${wrapTextSvg(reading, 23, 580, 38, 'reading', 400, 'middle')}
             </g>
         </g>
         
         <!-- Stat Pills / Signals Bar -->
-        ${statLine ? `<text class="stats-bar" x="400" y="940" text-anchor="middle">${escapeXml(statLine)}</text>` : ''}
+        <rect x="65" y="915" width="670" height="42" rx="4" fill="#111318" stroke="#1E232B" stroke-width="1" opacity="0.95"/>
+        ${statLine ? `<text class="stats-bar" x="400" y="941" text-anchor="middle">${escapeXml(statLine)}</text>` : ''}
 
-        <!-- Bottom Divider -->
-        <line class="line" x1="340" y1="1020" x2="460" y2="1020" />
+        <!-- Bottom Line -->
+        <line class="grid-line" x1="320" y1="1020" x2="480" y2="1020" />
         
         <!-- Footer / CTA -->
-        <text class="footer" x="400" y="1080" text-anchor="middle">REVEALED ON-CHAIN · OKX X-LAYER · AGENT AURA</text>
+        <text class="footer" x="400" y="1080" text-anchor="middle">SOULBOUND ON-CHAIN AURA · OKX X-LAYER</text>
         
     </svg>`;
 }
