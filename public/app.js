@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const toast = document.getElementById('toast');
     const chipBtns = document.querySelectorAll('.chip-btn');
     const headerConnectBtn = document.getElementById('header-connect-btn');
-    const networkStatus = document.getElementById('network-status');
 
     let currentResultData = null;
     let currentWallet = '';
@@ -52,7 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const addr = accounts[0];
                 const shortAddr = `${addr.substring(0, 6)}...${addr.substring(addr.length - 4)}`;
                 if (headerConnectBtn) headerConnectBtn.textContent = shortAddr;
-                if (networkStatus) networkStatus.textContent = 'X LAYER CONNECTED';
                 showToast(`OKX Wallet Connected: ${shortAddr}`);
                 return addr;
             }
@@ -93,9 +91,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (data.accent_color) {
-                document.documentElement.style.setProperty('--cyber-lime', data.accent_color);
+                document.documentElement.style.setProperty('--emerald', data.accent_color);
             } else {
-                document.documentElement.style.setProperty('--cyber-lime', '#A3E635');
+                document.documentElement.style.setProperty('--emerald', '#10B981');
             }
 
             setTimeout(() => {
@@ -126,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         input.value = '';
         currentResultData = null;
         currentWallet = '';
-        document.documentElement.style.setProperty('--cyber-lime', '#A3E635');
+        document.documentElement.style.setProperty('--emerald', '#10B981');
         switchState('state-form');
     });
 

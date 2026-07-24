@@ -11,7 +11,7 @@ function escapeXml(unsafe) {
 function generateCardSvg(walletAddress, archetypeData) {
     const { archetype, color, bgColor, glowColor, reading, stats, rarity, trust } = archetypeData;
     
-    // Formatting the wallet address as a serial number (e.g. 0xAB...1234)
+    // Formatting wallet address as a serial number
     const cleanAddress = String(walletAddress || '');
     const shortAddress = cleanAddress.length >= 10 
         ? `${cleanAddress.substring(0, 6)}...${cleanAddress.substring(cleanAddress.length - 4)}`
@@ -19,48 +19,30 @@ function generateCardSvg(walletAddress, archetypeData) {
 
     const safeShortAddress = escapeXml(shortAddress).toUpperCase();
     const safeArchetype = escapeXml(archetype);
-    const safeColor = escapeXml(color || '#A3E635');
-    const safeBgColor = escapeXml(bgColor || '#080A0D');
+    const safeColor = escapeXml(color || '#10B981');
+    const safeBgColor = escapeXml(bgColor || '#0A0D12');
     const safeGlowColor = escapeXml(glowColor || safeColor);
     const rarityLabel = escapeXml(rarity?.badge || 'RARE AURA').toUpperCase();
     const trustScoreVal = trust?.trustScore || stats?.trustScore || 85;
     
-    const ageText = stats ? `AGE: ${stats.ageDays}D` : '';
-    const txText = stats ? `TXS: ${stats.txCount}` : '';
-    const xLayerBadge = stats?.xLayerActive ? 'X-LAYER: ACTIVE' : 'CHAIN: ETH MAINNET';
-    const trustText = `TRUST: ${trustScoreVal}/100`;
-    const statLine = [ageText, txText, xLayerBadge, trustText].filter(Boolean).join('  //  ');
+    const ageText = stats ? `${stats.ageDays}D AGE` : '';
+    const txText = stats ? `${stats.txCount} TXS` : '';
+    const xLayerBadge = stats?.xLayerActive ? 'OKX X-LAYER' : '';
+    const trustText = `TRUST ${trustScoreVal}/100`;
+    const statLine = [ageText, txText, xLayerBadge, trustText].filter(Boolean).join('  ·  ');
 
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1200" width="800" height="1200">
         <defs>
             <style>
-                @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap');
+                @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap');
                 
                 .bg { fill: ${safeBgColor}; }
-                .border-main { stroke: ${safeColor}; stroke-width: 1.5; fill: none; opacity: 0.5; }
-                .border-sub { stroke: #1E232B; stroke-width: 1; fill: none; }
-                .grid-line { stroke: #1E232B; stroke-width: 1; stroke-dasharray: 4 4; opacity: 0.4; }
+                .border-outer { stroke: ${safeColor}; stroke-width: 1.5; fill: none; opacity: 0.35; }
+                .border-inner { stroke: #1F2937; stroke-width: 1; fill: none; opacity: 0.6; }
                 
-                .corner-tick {
-                    font-family: 'JetBrains Mono', monospace;
-                    font-size: 16px;
-                    font-weight: 700;
-                    fill: ${safeColor};
-                    opacity: 0.8;
-                }
-
-                .header-tag {
-                    font-family: 'JetBrains Mono', monospace;
-                    font-size: 12px;
-                    font-weight: 600;
-                    fill: ${safeColor};
-                    letter-spacing: 4px;
-                    text-transform: uppercase;
-                }
-
                 .serial {
-                    font-family: 'JetBrains Mono', monospace;
-                    font-size: 15px;
+                    font-family: 'Inter', sans-serif;
+                    font-size: 14px;
                     font-weight: 600;
                     fill: #9CA3AF;
                     letter-spacing: 5px;
@@ -68,7 +50,7 @@ function generateCardSvg(walletAddress, archetypeData) {
                 }
                 
                 .rarity-pill {
-                    font-family: 'JetBrains Mono', monospace;
+                    font-family: 'Inter', sans-serif;
                     font-size: 11px;
                     font-weight: 700;
                     fill: ${safeColor};
@@ -77,7 +59,7 @@ function generateCardSvg(walletAddress, archetypeData) {
                 }
 
                 .title {
-                    font-family: 'Space Grotesk', sans-serif;
+                    font-family: 'Outfit', sans-serif;
                     font-size: 64px;
                     font-weight: 700;
                     fill: #FFFFFF;
@@ -85,16 +67,16 @@ function generateCardSvg(walletAddress, archetypeData) {
                 }
                 
                 .reading {
-                    font-family: 'Space Grotesk', sans-serif;
+                    font-family: 'Inter', sans-serif;
                     font-size: 23px;
                     font-weight: 400;
-                    fill: #D1D5DB;
+                    fill: #E5E7EB;
                     opacity: 0.88;
                     line-height: 1.5;
                 }
                 
                 .stats-bar {
-                    font-family: 'JetBrains Mono', monospace;
+                    font-family: 'Inter', sans-serif;
                     font-size: 13px;
                     font-weight: 600;
                     fill: ${safeColor};
@@ -103,57 +85,45 @@ function generateCardSvg(walletAddress, archetypeData) {
                 }
 
                 .footer {
-                    font-family: 'JetBrains Mono', monospace;
-                    font-size: 12px;
+                    font-family: 'Inter', sans-serif;
+                    font-size: 13px;
                     font-weight: 500;
                     fill: #6B7280;
                     letter-spacing: 4px;
                     text-transform: uppercase;
                 }
+                
+                .line { stroke: #1F2937; stroke-width: 1; opacity: 0.8; }
             </style>
             
-            <!-- Dynamic Matrix Glow -->
-            <radialGradient id="matrixGlow" cx="50%" cy="40%" r="60%" fx="50%" fy="40%">
-                <stop offset="0%" stop-color="${safeGlowColor}" stop-opacity="0.25" />
-                <stop offset="50%" stop-color="${safeGlowColor}" stop-opacity="0.08" />
+            <!-- Soft Dynamic Glow -->
+            <radialGradient id="cardGlow" cx="50%" cy="38%" r="60%" fx="50%" fy="38%">
+                <stop offset="0%" stop-color="${safeGlowColor}" stop-opacity="0.22" />
+                <stop offset="50%" stop-color="${safeGlowColor}" stop-opacity="0.06" />
                 <stop offset="100%" stop-color="${safeGlowColor}" stop-opacity="0" />
             </radialGradient>
-
-            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1E232B" stroke-width="0.8" opacity="0.3"/>
-            </pattern>
         </defs>
 
         <!-- Base Dark Background -->
         <rect class="bg" width="100%" height="100%" />
         
-        <!-- Grid Pattern Overlay -->
-        <rect width="100%" height="100%" fill="url(#grid)" />
-
-        <!-- Radial Aura Glow -->
-        <circle cx="400" cy="460" r="540" fill="url(#matrixGlow)" />
+        <!-- Aura Glow -->
+        <circle cx="400" cy="450" r="520" fill="url(#cardGlow)" />
         
-        <!-- Technical Outer & Inner Borders -->
-        <rect class="border-main" x="35" y="35" width="730" height="1130" />
-        <rect class="border-sub" x="47" y="47" width="706" height="1106" />
+        <!-- Elegant Outer & Inner Borders -->
+        <rect class="border-outer" x="35" y="35" width="730" height="1130" rx="12" />
+        <rect class="border-inner" x="48" y="48" width="704" height="1104" rx="8" />
         
-        <!-- Corner Crosshairs (+) -->
-        <text class="corner-tick" x="42" y="58" text-anchor="start">+</text>
-        <text class="corner-tick" x="758" y="58" text-anchor="end">+</text>
-        <text class="corner-tick" x="42" y="1150" text-anchor="start">+</text>
-        <text class="corner-tick" x="758" y="1150" text-anchor="end">+</text>
+        <!-- Diamond Geometric Accent -->
+        <polygon points="400,85 405,95 400,105 395,95" fill="${safeColor}" opacity="0.85"/>
         
-        <!-- Top Terminal Header -->
-        <text class="header-tag" x="400" y="95" text-anchor="middle">// AGENT AURA ORACLE / X LAYER 196</text>
-        <line class="grid-line" x1="80" y1="115" x2="720" y2="115" />
+        <!-- Header: Serial Number -->
+        <text class="serial" x="400" y="145" text-anchor="middle">NO. ${safeShortAddress}</text>
+        <line class="line" x1="280" y1="180" x2="520" y2="180" />
         
-        <!-- Serial Number -->
-        <text class="serial" x="400" y="155" text-anchor="middle">SERIAL: ${safeShortAddress}</text>
-        <line class="grid-line" x1="280" y1="185" x2="520" y2="185" />
-        
-        <!-- Rarity Badge Box -->
-        <rect x="250" y="205" width="300" height="32" rx="4" fill="#111318" stroke="${safeColor}" stroke-width="1" opacity="0.9"/>
-        <text class="rarity-pill" x="400" y="226" text-anchor="middle">✦ ${rarityLabel} ✦</text>
+        <!-- Rarity Badge -->
+        <rect x="250" y="202" width="300" height="32" rx="16" fill="#111827" stroke="${safeColor}" stroke-width="1" stroke-opacity="0.5"/>
+        <text class="rarity-pill" x="400" y="223" text-anchor="middle">✦ ${rarityLabel} ✦</text>
 
         <!-- Main Content -->
         <g transform="translate(0, 480)">
@@ -167,11 +137,11 @@ function generateCardSvg(walletAddress, archetypeData) {
         </g>
         
         <!-- Stat Pills / Signals Bar -->
-        <rect x="65" y="915" width="670" height="42" rx="4" fill="#111318" stroke="#1E232B" stroke-width="1" opacity="0.95"/>
-        ${statLine ? `<text class="stats-bar" x="400" y="941" text-anchor="middle">${escapeXml(statLine)}</text>` : ''}
+        <rect x="65" y="915" width="670" height="44" rx="22" fill="#111827" stroke="#1F2937" stroke-width="1"/>
+        ${statLine ? `<text class="stats-bar" x="400" y="942" text-anchor="middle">${escapeXml(statLine)}</text>` : ''}
 
         <!-- Bottom Line -->
-        <line class="grid-line" x1="320" y1="1020" x2="480" y2="1020" />
+        <line class="line" x1="340" y1="1020" x2="460" y2="1020" />
         
         <!-- Footer / CTA -->
         <text class="footer" x="400" y="1080" text-anchor="middle">SOULBOUND ON-CHAIN AURA · OKX X-LAYER</text>
