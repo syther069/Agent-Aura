@@ -97,9 +97,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function switchState(stateId) {
         [stateForm, stateLoading, stateResult].forEach(el => {
+            if (!el) return;
             el.classList.remove('active');
+            el.classList.add('hidden');
         });
-        document.getElementById(stateId).classList.add('active');
+        const target = document.getElementById(stateId);
+        if (target) {
+            target.classList.remove('hidden');
+            target.classList.add('active');
+        }
     }
 
     // 🔬 Hydraulic Borosilicate Specimen Card Tilt Physics
@@ -257,10 +263,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        fetchAura(input.value.trim());
-    });
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const val = input ? input.value.trim() : '';
+            if (val) {
+                fetchAura(val);
+            } else {
+                showToast('Please enter a wallet address or ENS domain.');
+            }
+        });
+    }
+
+    const submitBtn = document.getElementById('submit-btn');
+    if (submitBtn) {
+        submitBtn.addEventListener('click', (e) => {
+            const val = input ? input.value.trim() : '';
+            if (val) {
+                e.preventDefault();
+                fetchAura(val);
+            }
+        });
+    }
 
     chipBtns.forEach(btn => {
         btn.addEventListener('click', () => {
