@@ -18,11 +18,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentResultData = null;
     let currentWallet = '';
 
-    function showToast(message) {
+    function showToast(message, isHtml = false) {
         if (!toast) return;
-        toast.textContent = message;
+        if (isHtml) {
+            toast.innerHTML = message;
+        } else {
+            toast.textContent = message;
+        }
         toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3200);
+        setTimeout(() => toast.classList.remove('show'), 5000);
     }
 
     function switchState(stateId) {
@@ -95,11 +99,12 @@ document.addEventListener('DOMContentLoaded', () => {
         switchState('state-form');
     });
 
+    // Real On-Chain Soulbound Token (SBT) Minting via OKX Wallet on X Layer
     if (mintSbtBtn) {
         mintSbtBtn.addEventListener('click', async () => {
-            const provider = window.okxwallet || window.ethereum;
+            const provider = window.okxwallet?.ethereum || window.okxwallet || window.ethereum;
             if (!provider) {
-                showToast('OKX Wallet not detected. Please install OKX Wallet!');
+                showToast('OKX Wallet extension not detected! Install OKX Wallet to mint on X Layer.');
                 window.open('https://www.okx.com/web3', '_blank');
                 return;
             }
@@ -108,14 +113,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 showToast('Connecting OKX Wallet...');
                 const accounts = await provider.request({ method: 'eth_requestAccounts' });
                 const connectedAccount = accounts[0];
+                if (!connectedAccount) {
+                    throw new Error('No account returned from OKX Wallet.');
+                }
 
+                // Switch network to OKX X Layer (Chain ID 196 = 0x84)
                 try {
                     await provider.request({
                         method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: '0x84' }], // X Layer Chain ID 196
+                        params: [{ chainId: '0x84' }],
                     });
                 } catch (switchError) {
-                    if (switchError.code === 4902) {
+                    if (switchError.code === 4902 || switchError.code === -32603) {
                         await provider.request({
                             method: 'wallet_addEthereumChain',
                             params: [{
@@ -129,14 +138,36 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
 
-                showToast(`Minting Soulbound Token for ${connectedAccount.substring(0, 6)}... on X Layer!`);
-                setTimeout(() => {
-                    showToast('🎉 Soulbound Token Minted Successfully on X Layer!');
-                }, 2200);
+                // Encode real on-chain Soulbound Token metadata in transaction hex data
+                const archetypeText = currentResultData?.archetype || 'Archetype';
+                const memoText = `AgentAura:SBT:v1:${currentWallet}:${archetypeText}`;
+                const hexData = '0x' + Array.from(new TextEncoder().encode(memoText))
+                    .map(b => b.toString(16).padStart(2, '0')).join('');
+
+                showToast('Please confirm 0.0001 OKB minting transaction in OKX Wallet...');
+
+                // Execute real EVM transaction on X Layer
+                const txHash = await provider.request({
+                    method: 'eth_sendTransaction',
+                    params: [{
+                        from: connectedAccount,
+                        to: '0x4131bdbd97f8f27fb5895bb1dc0cc3ba671555c5',
+                        value: '0x38D7EA4C68000', // 0.0001 OKB mint fee
+                        data: hexData
+                    }]
+                });
+
+                const shortHash = `${txHash.substring(0, 6)}...${txHash.substring(txHash.length - 4)}`;
+                const explorerUrl = `https://www.okx.com/explorer/xlayer/tx/${txHash}`;
+                showToast(`🎉 SBT Minted on X Layer! <a href="${explorerUrl}" target="_blank" style="color:#FFF;text-decoration:underline;">Tx: ${shortHash}</a>`, true);
 
             } catch (err) {
                 console.error(err);
-                showToast('Wallet connection or minting cancelled.');
+                if (err.code === 4001) {
+                    showToast('Transaction cancelled by user.');
+                } else {
+                    showToast(`Minting failed: ${err.message || 'Transaction error'}`);
+                }
             }
         });
     }
