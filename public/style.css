@@ -33,9 +33,10 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
 }
 
-/* Dark Ambient Aura Glow Background */
+/* Dark Ambient Animated Glow Mesh */
 body::before {
     content: '';
     position: fixed;
@@ -44,9 +45,16 @@ body::before {
     transform: translateX(-50%);
     width: 900px;
     height: 700px;
-    background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, rgba(7, 8, 10, 0) 70%);
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.10) 0%, rgba(16, 185, 129, 0.05) 50%, rgba(7, 8, 10, 0) 70%);
     pointer-events: none;
     z-index: 0;
+    animation: meshMorph 14s ease-in-out infinite alternate;
+}
+
+@keyframes meshMorph {
+    0% { transform: translateX(-50%) scale(1) rotate(0deg); opacity: 0.8; }
+    50% { transform: translateX(-48%) scale(1.12) rotate(6deg); opacity: 1; }
+    100% { transform: translateX(-52%) scale(0.95) rotate(-6deg); opacity: 0.85; }
 }
 
 /* Dark Glass Sticky Navbar */
@@ -108,6 +116,7 @@ body::before {
     height: 6px;
     background-color: #10B981;
     border-radius: 50%;
+    box-shadow: 0 0 8px #10B981;
 }
 
 .chip-val {
@@ -132,6 +141,7 @@ body::before {
 .btn-connect:hover {
     border-color: var(--glass-border-hover);
     background: var(--glass-bg-hover);
+    box-shadow: 0 0 16px rgba(255, 255, 255, 0.08);
 }
 
 /* Main Container */
@@ -159,14 +169,25 @@ body::before {
     margin-bottom: 0.75rem;
 }
 
+/* Metallic Shimmering Hero Headline */
 .hero-title {
     font-family: var(--font-serif);
     font-size: 3.8rem;
     font-weight: 300;
     letter-spacing: -0.03em;
     line-height: 1.05;
-    color: var(--text-alabaster);
+    background: linear-gradient(90deg, #F7F5F1 0%, #D4AF37 40%, #FFFFFF 65%, #F7F5F1 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textShimmer 7s ease-in-out infinite;
     margin-bottom: 1.25rem;
+}
+
+@keyframes textShimmer {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 .hero-desc {
@@ -197,7 +218,7 @@ body::before {
 
 .glass-search-container:focus-within {
     border-color: var(--glass-border-hover);
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 35px rgba(255, 255, 255, 0.08);
 }
 
 .input-wrapper {
@@ -236,25 +257,45 @@ input[type="text"]::placeholder {
     color: var(--text-dim);
 }
 
-.btn-reveal {
+/* Liquid Shimmer Sweep Primary CTA */
+.btn-reveal, .btn-primary-alabaster {
+    position: relative;
+    overflow: hidden;
     font-family: var(--font-mono);
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     font-weight: 600;
     letter-spacing: 0.1em;
     color: #07080A;
     background-color: var(--text-alabaster);
     border: none;
-    padding: 0.9rem 1.8rem;
+    padding: 1.1rem 2rem;
     border-radius: 8px;
     cursor: pointer;
     white-space: nowrap;
     transition: var(--transition);
 }
 
-.btn-reveal:hover {
+.btn-reveal::before, .btn-primary-alabaster::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    transform: skewX(-25deg);
+    animation: shimmerSweep 4.5s infinite;
+    pointer-events: none;
+}
+
+@keyframes shimmerSweep {
+    0% { left: -100%; }
+    30%, 100% { left: 200%; }
+}
+
+.btn-reveal:hover, .btn-primary-alabaster:hover {
     background-color: #FFFFFF;
-    box-shadow: 0 0 20px rgba(247, 245, 241, 0.3);
-    transform: translateY(-1px);
+    box-shadow: 0 0 30px rgba(247, 245, 241, 0.35);
+    transform: translateY(-2px);
 }
 
 /* Demo Chips */
@@ -285,6 +326,7 @@ input[type="text"]::placeholder {
 .chip-btn:hover {
     border-color: var(--glass-border-hover);
     color: var(--text-alabaster);
+    transform: translateY(-1px);
 }
 
 /* State Visibility */
@@ -402,7 +444,7 @@ input[type="text"]::placeholder {
     background: var(--glass-bg);
 }
 
-/* Glass Display Frame */
+/* Interactive 3D Holographic Card Frame */
 .card-glass-frame {
     position: relative;
     max-width: 520px;
@@ -414,6 +456,14 @@ input[type="text"]::placeholder {
     border-radius: 16px;
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
     overflow: hidden;
+    transform-style: preserve-3d;
+    transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.card-glass-frame:hover {
+    border-color: var(--glass-border-hover);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 255, 255, 0.08);
 }
 
 .aura-glow-backdrop {
@@ -423,8 +473,9 @@ input[type="text"]::placeholder {
     transform: translate(-50%, -50%);
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.10) 0%, transparent 70%);
     pointer-events: none;
+    transition: all 0.15s ease-out;
 }
 
 .card-glass-frame img {
@@ -450,26 +501,6 @@ input[type="text"]::placeholder {
     grid-column: span 3;
 }
 
-.btn-primary-alabaster {
-    font-family: var(--font-mono);
-    font-size: 0.88rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    color: #07080A;
-    background-color: var(--text-alabaster);
-    border: none;
-    padding: 1.1rem 2rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: var(--transition);
-    width: 100%;
-}
-
-.btn-primary-alabaster:hover {
-    background-color: #FFFFFF;
-    box-shadow: 0 0 24px rgba(247, 245, 241, 0.25);
-}
-
 .btn-glass-secondary {
     font-family: var(--font-mono);
     font-size: 0.78rem;
@@ -487,6 +518,7 @@ input[type="text"]::placeholder {
 .btn-glass-secondary:hover {
     border-color: var(--glass-border-hover);
     background-color: var(--glass-bg-hover);
+    transform: translateY(-1px);
 }
 
 /* Toast */

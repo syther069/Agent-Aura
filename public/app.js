@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('aura-form');
     const input = document.getElementById('wallet-input');
     const cardImage = document.getElementById('card-image');
+    const cardFrame = document.querySelector('.card-glass-frame');
+    const glowBackdrop = document.querySelector('.aura-glow-backdrop');
     
     const downloadBtn = document.getElementById('download-btn');
     const mintSbtBtn = document.getElementById('mint-sbt-btn');
@@ -35,6 +37,51 @@ document.addEventListener('DOMContentLoaded', () => {
             el.classList.remove('active');
         });
         document.getElementById(stateId).classList.add('active');
+    }
+
+    // 🔮 Interactive 3D Holographic Card Tilt Effect
+    if (cardFrame) {
+        cardFrame.addEventListener('mousemove', (e) => {
+            const rect = cardFrame.getBoundingClientRect();
+            const x = e.clientX - rect.left; // x position within element
+            const y = e.clientY - rect.top;  // y position within element
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateY = ((x - centerX) / centerX) * 12; // Max 12deg tilt Y
+            const rotateX = -((y - centerY) / centerY) * 12; // Max 12deg tilt X
+            
+            cardFrame.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            
+            if (glowBackdrop) {
+                const glowX = (x / rect.width) * 100;
+                const glowY = (y / rect.height) * 100;
+                glowBackdrop.style.background = `radial-gradient(circle at ${glowX}% ${glowY}%, rgba(255, 255, 255, 0.22) 0%, transparent 65%)`;
+            }
+        });
+
+        cardFrame.addEventListener('mouseleave', () => {
+            cardFrame.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+            if (glowBackdrop) {
+                glowBackdrop.style.background = 'radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.10) 0%, transparent 70%)';
+            }
+        });
+    }
+
+    // 🔢 Smooth Number Count-Up Animation
+    function animateValue(element, start, end, duration, prefix = '', suffix = '') {
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            const currentVal = Math.floor(progress * (end - start) + start);
+            element.textContent = `${prefix}${currentVal}${suffix}`;
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
     }
 
     async function connectWallet() {
@@ -86,8 +133,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 rarityBadge.textContent = `◇ ${data.rarity.badge || data.rarity.label || 'RARE AURA'} ◇`;
             }
             if (trustBadge && (data.trust_score || data.stats?.trustScore)) {
-                const score = data.trust_score || data.stats?.trustScore;
-                trustBadge.textContent = `TRUST SCORE ${score}/100`;
+                const targetScore = data.trust_score || data.stats?.trustScore;
+                animateValue(trustBadge, 0, targetScore, 1000, 'TRUST SCORE ', '/100');
             }
 
             setTimeout(() => {
