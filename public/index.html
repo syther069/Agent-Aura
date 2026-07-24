@@ -3,39 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AGENT AURA — On-Chain Personality Oracle & AI Trust Rating / OKX X Layer</title>
+    <title>AGENT AURA — The Opticks of Reputation & Crystallographic Oracle / OKX X Layer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <!-- Liquid Ambient Caustic Background Blobs -->
+    <!-- Reticle Retaining Reticle Grid & Geometric Crystal Caustics -->
     <div class="liquid-bg-container" aria-hidden="true">
-        <div class="liquid-blob blob-1"></div>
-        <div class="liquid-blob blob-2"></div>
-        <div class="liquid-blob blob-3"></div>
+        <svg class="caustic-reticle-svg" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="reticleGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(30,30,30,0.04)" stroke-width="0.5"/>
+                </pattern>
+                <pattern id="causticRays" width="240" height="240" patternUnits="userSpaceOnUse">
+                    <path d="M 0 120 Q 60 40 120 120 T 240 120" fill="none" stroke="rgba(232,213,183,0.35)" stroke-width="1"/>
+                    <path d="M 120 0 Q 40 60 120 120 T 120 240" fill="none" stroke="rgba(200,220,235,0.25)" stroke-width="0.8"/>
+                    <circle cx="120" cy="120" r="2" fill="rgba(30,30,30,0.15)"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#reticleGrid)"/>
+            <rect width="100%" height="100%" fill="url(#causticRays)" opacity="0.7"/>
+        </svg>
     </div>
 
-    <!-- Dark Glass Sticky Navbar -->
+    <!-- Sticky Glass Instrument Navbar -->
     <header class="top-nav">
         <div class="nav-brand">
             <span class="brand-title">Agent Aura</span>
-            <span class="edition-tag">◇ X LAYER 196</span>
+            <span class="edition-tag">◇ APPARATUS 196</span>
         </div>
         
         <div class="nav-right">
             <div class="theme-selector-group" id="theme-selector">
-                <button type="button" class="theme-pill-btn active" data-theme-id="obsidian" title="Obsidian Platinum Theme">Obsidian</button>
-                <button type="button" class="theme-pill-btn" data-theme-id="graphite" title="Graphite Steel Theme">Graphite</button>
-                <button type="button" class="theme-pill-btn" data-theme-id="platinum" title="Platinum Monochrome Theme">Platinum</button>
-                <button type="button" class="theme-pill-btn" data-theme-id="abyssal" title="Abyssal Ice Theme">Abyssal</button>
+                <button type="button" class="theme-pill-btn active" data-theme-id="obsidian" title="Rice Paper Theme">Rice Paper</button>
+                <button type="button" class="theme-pill-btn" data-theme-id="graphite" title="Warm Linen Theme">Warm Linen</button>
+                <button type="button" class="theme-pill-btn" data-theme-id="platinum" title="Pure Snow Theme">Pure Snow</button>
+                <button type="button" class="theme-pill-btn" data-theme-id="abyssal" title="Cool Porcelain Theme">Porcelain</button>
             </div>
             <div class="status-chip desktop-only">
                 <span class="chip-dot"></span>
-                <span class="chip-val">GROQ LLM ACTIVE</span>
+                <span class="chip-val">OPTICAL ORACLE ACTIVE</span>
             </div>
-            <button type="button" class="btn-connect" id="header-connect-btn">CONNECT WALLET</button>
+            <button type="button" class="btn-connect" id="header-connect-btn">ENGAGE APPARATUS</button>
         </div>
     </header>
 
@@ -44,38 +55,38 @@
         <!-- Form State View -->
         <main class="state-form active" id="state-form">
             <div class="hero-section">
-                <span class="hero-kicker">// CRYPTOGRAPHIC RESONANCE ENGINE</span>
+                <span class="hero-kicker">◇ THE OPTICKS OF REPUTATION ◇</span>
                 <h1 class="hero-title">Decrypt Your Resonance.</h1>
                 <p class="hero-desc">
-                    Map your transactional footprint into a soulbound cryptographic identity. Synthesized directly across OKX X Layer and Ethereum.
+                    A precision optical instrument for deciphering the spectral refraction of cryptographic identity. Every wallet is a lens; every transaction is a photon.
                 </p>
                 
-                <!-- Dark Glass Search Container -->
+                <!-- Specimen Input Vessel -->
                 <form id="aura-form" class="glass-search-container">
                     <div class="input-wrapper">
-                        <label for="wallet-input" class="input-micro-label">LEDGER IDENTIFIER OR RESOLVED ENS</label>
+                        <label for="wallet-input" class="input-micro-label">SPECIMEN ADDRESS OR RESOLVED ENS</label>
                         <input type="text" id="wallet-input" placeholder="0x... or vitalik.eth" required autocomplete="off" spellcheck="false">
                     </div>
                     <button type="submit" class="btn-reveal">
-                        <span>DECRYPT SIGNATURE</span>
+                        <span>OBSERVE REFRACTION</span>
                         <svg class="btn-svg-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                     </button>
                 </form>
 
                 <!-- Demo Triggers -->
                 <div class="demo-chips">
-                    <span class="chips-label">OBSERVATION TARGETS:</span>
+                    <span class="chips-label">SPECIMEN TARGETS:</span>
                     <button type="button" class="chip-btn" data-wallet="vitalik.eth">vitalik.eth</button>
                     <button type="button" class="chip-btn" data-wallet="0x28c6c06298d514db089934071355e5743bf21d60">Binance Hot</button>
                     <button type="button" class="chip-btn" data-wallet="0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045">OG Whale</button>
                 </div>
             </div>
 
-            <!-- Hall of Fame Leaderboard Section -->
+            <!-- Hall of Fame Specimen Gallery Section -->
             <section class="hall-of-fame-section">
                 <div class="section-header">
-                    <span class="section-kicker">// LEDGER ARCHETYPES</span>
-                    <h2 class="section-title">Resonance Gallery</h2>
+                    <span class="section-kicker">◇ ON-CHAIN SPECIMENS ◇</span>
+                    <h2 class="section-title">Specimen Gallery</h2>
                 </div>
 
                 <div class="fame-grid">
@@ -88,7 +99,7 @@
                         <p class="fame-quote">"Architect of the ledger, weaving smart contract lore across Ethereum & X Layer."</p>
                         <div class="fame-foot">
                             <span>RESONANCE 90%</span>
-                            <span class="fame-action">DECRYPT →</span>
+                            <span class="fame-action">OBSERVE →</span>
                         </div>
                     </div>
 
@@ -101,7 +112,7 @@
                         <p class="fame-quote">"Master of liquidity pools, moving billions in silent atomic precision."</p>
                         <div class="fame-foot">
                             <span>RESONANCE 95%</span>
-                            <span class="fame-action">DECRYPT →</span>
+                            <span class="fame-action">OBSERVE →</span>
                         </div>
                     </div>
 
@@ -114,7 +125,7 @@
                         <p class="fame-quote">"Unbroken conviction amidst bear market liquidations, holding genesis vault keys."</p>
                         <div class="fame-foot">
                             <span>RESONANCE 92%</span>
-                            <span class="fame-action">DECRYPT →</span>
+                            <span class="fame-action">OBSERVE →</span>
                         </div>
                     </div>
                 </div>
@@ -125,8 +136,8 @@
         <main class="state-loading" id="state-loading">
             <div class="loading-glass-card">
                 <div class="spinner-ring"></div>
-                <h3 class="loading-title">Deconstructing cryptographic signatures...</h3>
-                <p class="loading-desc">Parsing block records across E-155 protocol layers.</p>
+                <h3 class="loading-title">Refracting cryptographic photons...</h3>
+                <p class="loading-desc">Calibrating spectral reticle across E-155 protocol layers.</p>
             </div>
         </main>
 
@@ -135,7 +146,7 @@
             <div class="result-layout">
                 <div class="result-header">
                     <div class="meta-titles">
-                        <span class="meta-kicker">// SOULBOUND ARCHETYPE ALIGNED</span>
+                        <span class="meta-kicker">◇ SPECIMEN REFRACTION COMPLETE ◇</span>
                         <h2 class="result-main-title">Resonance Aligned</h2>
                     </div>
                     <div class="badge-group" id="badge-row">
@@ -144,34 +155,34 @@
                     </div>
                 </div>
 
-                <!-- Glass Preview Frame -->
+                <!-- Glass Specimen Slide Frame -->
                 <div class="card-glass-frame">
                     <div class="aura-glow-backdrop"></div>
-                    <img id="card-image" src="" alt="Agent Aura Tarot Card">
+                    <img id="card-image" src="" alt="Agent Aura Specimen Slide">
                 </div>
 
-                <!-- Professional Minimalist Liquid Glass Console -->
+                <!-- Precision Optical Console -->
                 <div class="liquid-console-wrapper" id="trust-matrix">
                     <!-- Trust Matrix Header & Metrics -->
                     <div class="liquid-matrix-section">
                         <div class="matrix-top-bar">
                             <div class="matrix-title-group">
                                 <span class="matrix-shield-icon">◇</span>
-                                <span class="matrix-title">AGENT-TO-AGENT (A2A) TRUST & RISK MATRIX</span>
+                                <span class="matrix-title">AGENT-TO-AGENT (A2A) REPUTATION APPARATUS</span>
                             </div>
-                            <span class="matrix-status-pill" id="matrix-risk">RISK LEVEL: LOW</span>
+                            <span class="matrix-status-pill" id="matrix-risk">RISK INDEX: OPTIMAL</span>
                         </div>
                         <div class="matrix-grid">
                             <div class="matrix-item">
-                                <span class="m-label">REPUTATION TIER</span>
+                                <span class="m-label">REPUTATION CLASSIFICATION</span>
                                 <span class="m-val" id="m-tier">VETERAN</span>
                             </div>
                             <div class="matrix-item">
-                                <span class="m-label">RECOMMENDED MAX TX</span>
+                                <span class="m-label">RECOMMENDED MAX FLOW</span>
                                 <span class="m-val" id="m-limit">100.0 ETH</span>
                             </div>
                             <div class="matrix-item">
-                                <span class="m-label">OKX X LAYER STATUS</span>
+                                <span class="m-label">OKX X-LAYER RETICLE</span>
                                 <span class="m-val" id="m-xlayer">ACTIVE (CHAIN 196)</span>
                             </div>
                         </div>
@@ -180,7 +191,7 @@
                     <!-- Subtle Liquid Divider -->
                     <div class="liquid-console-divider"></div>
 
-                    <!-- Liquid Action Console Section -->
+                    <!-- Action Console Section -->
                     <div class="liquid-action-section">
                         <button id="mint-sbt-btn" class="btn-liquid-primary">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
@@ -190,7 +201,7 @@
                         <div class="liquid-btn-row">
                             <button id="download-btn" class="btn-liquid-secondary">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-                                <span>CARD SVG</span>
+                                <span>SPECIMEN SVG</span>
                             </button>
                             <button id="share-x-btn" class="btn-liquid-secondary">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
@@ -203,7 +214,7 @@
                         </div>
                         <button id="reset-btn" class="btn-liquid-ghost">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-                            <span>ANALYZE ANOTHER WALLET</span>
+                            <span>EXAMINE NEW SPECIMEN</span>
                         </button>
                     </div>
                 </div>

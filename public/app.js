@@ -49,9 +49,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 💧 Dynamic Liquid Click Ripple Wave Physics
+    // 💧 Caustic Flash & Liquid Click Ripple Physics
     document.addEventListener('click', (e) => {
-        const targetBtn = e.target.closest('button, .chip-btn, .theme-pill-btn');
+        const targetBtn = e.target.closest('button, .chip-btn, .theme-pill-btn, .fame-card');
         if (!targetBtn) return;
 
         const rect = targetBtn.getBoundingClientRect();
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const rect = container.getBoundingClientRect();
             const x = ((e.clientX - rect.left) / rect.width) * 100;
             const y = ((e.clientY - rect.top) / rect.height) * 100;
-            container.style.backgroundImage = `radial-gradient(circle at ${x}% ${y}%, var(--glass-bg-hover) 0%, var(--glass-bg) 80%)`;
+            container.style.backgroundImage = `radial-gradient(circle at ${x}% ${y}%, var(--glass-bg-hover) 0%, var(--glass-bg) 85%)`;
         });
 
         container.addEventListener('mouseleave', () => {
@@ -102,8 +102,24 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById(stateId).classList.add('active');
     }
 
-    // 🔮 Interactive 3D Holographic Card Tilt Effect
+    // 🔬 Hydraulic Borosilicate Specimen Card Tilt Physics
     if (cardFrame) {
+        let currentX = 0, currentY = 0;
+        let targetX = 0, targetY = 0;
+        let animId = null;
+
+        function updateHydraulicTilt() {
+            currentX += (targetX - currentX) * 0.12;
+            currentY += (targetY - currentY) * 0.12;
+            cardFrame.style.transform = `perspective(1000px) rotateX(${currentX}deg) rotateY(${currentY}deg) scale3d(1.02, 1.02, 1.02)`;
+            
+            if (Math.abs(targetX - currentX) > 0.01 || Math.abs(targetY - currentY) > 0.01) {
+                animId = requestAnimationFrame(updateHydraulicTilt);
+            } else {
+                animId = null;
+            }
+        }
+
         cardFrame.addEventListener('mousemove', (e) => {
             const rect = cardFrame.getBoundingClientRect();
             const x = e.clientX - rect.left;
@@ -112,22 +128,28 @@ document.addEventListener('DOMContentLoaded', () => {
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
             
-            const rotateY = ((x - centerX) / centerX) * 12;
-            const rotateX = -((y - centerY) / centerY) * 12;
-            
-            cardFrame.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            targetY = ((x - centerX) / centerX) * 10;
+            targetX = -((y - centerY) / centerY) * 10;
+
+            if (!animId) {
+                animId = requestAnimationFrame(updateHydraulicTilt);
+            }
             
             if (glowBackdrop) {
                 const glowX = (x / rect.width) * 100;
                 const glowY = (y / rect.height) * 100;
-                glowBackdrop.style.background = `radial-gradient(circle at ${glowX}% ${glowY}%, rgba(255, 255, 255, 0.22) 0%, transparent 65%)`;
+                glowBackdrop.style.background = `radial-gradient(circle at ${glowX}% ${glowY}%, rgba(232, 213, 183, 0.35) 0%, transparent 65%)`;
             }
         });
 
         cardFrame.addEventListener('mouseleave', () => {
-            cardFrame.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+            targetX = 0;
+            targetY = 0;
+            if (!animId) {
+                animId = requestAnimationFrame(updateHydraulicTilt);
+            }
             if (glowBackdrop) {
-                glowBackdrop.style.background = 'radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.10) 0%, transparent 70%)';
+                glowBackdrop.style.background = 'radial-gradient(circle at 50% 50%, rgba(232, 213, 183, 0.15) 0%, transparent 70%)';
             }
         });
     }
