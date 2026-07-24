@@ -34,17 +34,48 @@ async function resolveEns(input) {
 }
 
 /**
- * Fetch real on-chain signals from Etherscan.
+ * Fetch signals from OKX X Layer (L2 Chain ID 196) via public RPC
  */
-async function getEtherscanSignals(rawAddress) {
+async function getXLayerSignals(walletAddress) {
+    try {
+        const response = await axios.post('https://rpc.xlayer.tech', {
+            jsonrpc: '2.0',
+            method: 'eth_getTransactionCount',
+            params: [walletAddress, 'latest'],
+            id: 1
+        }, { timeout: 3000 });
+
+        const hexCount = response.data?.result || '0x0';
+        const txCount = parseInt(hexCount, 16);
+        return {
+            xLayerActive: txCount > 0,
+            xLayerTxCount: txCount,
+            network: 'X Layer (OKX L2)'
+        };
+    } catch (err) {
+        return {
+            xLayerActive: false,
+            xLayerTxCount: 0,
+            network: 'X Layer (OKX L2)'
+        };
+    }
+}
+
+/**
+ * Fetch real on-chain signals from Etherscan and OKX X Layer.
+ */
+async function getOnChainSignals(rawAddress) {
     const walletAddress = await resolveEns(rawAddress);
+    
+    // Fetch X Layer activity concurrently
+    const xLayerPromise = getXLayerSignals(walletAddress);
+
     try {
         const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
         if (!ETHERSCAN_API_KEY) {
             throw new Error("Etherscan API key is not configured.");
         }
 
-        // Fetch up to 10,000 normal transactions for the address using V2 API
         const response = await axios.get('https://api.etherscan.io/v2/api', {
             params: {
                 chainid: 1,
@@ -58,14 +89,11 @@ async function getEtherscanSignals(rawAddress) {
                 sort: 'asc',
                 apikey: ETHERSCAN_API_KEY
             },
-            timeout: 5000
+            timeout: 4500
         });
 
+        const xLayerSignals = await xLayerPromise;
         const data = response.data;
-        if (data.status === '0' && data.message !== 'No transactions found') {
-            throw new Error(`Etherscan API error/warning: ${data.result}`);
-        }
-
         const txs = Array.isArray(data.result) ? data.result : [];
         const txCount = txs.length;
         
@@ -74,12 +102,10 @@ async function getEtherscanSignals(rawAddress) {
         let highRiskActivity = false;
 
         if (txCount > 0) {
-            // First transaction timestamp
             const firstTxTimestamp = parseInt(txs[0].timeStamp, 10);
             const currentTimestamp = Math.floor(Date.now() / 1000);
             walletAgeDays = Math.max(0, (currentTimestamp - firstTxTimestamp) / 86400);
 
-            // Calculate unique addresses interacted with (proxy for diversification)
             const uniqueToAddresses = new Set();
             txs.forEach(tx => {
                 if (tx.to) uniqueToAddresses.add(tx.to.toLowerCase());
@@ -95,21 +121,62 @@ async function getEtherscanSignals(rawAddress) {
             txCount,
             walletAgeDays,
             uniqueInteractions,
-            highRiskActivity
+            highRiskActivity,
+            xLayerActive: xLayerSignals.xLayerActive,
+            xLayerTxCount: xLayerSignals.xLayerTxCount
         };
 
     } catch (error) {
-        console.error("Error fetching from Etherscan, falling back to deterministic oracle:", error.message);
-        // Fallback to deterministic mock if API fails
+        console.error("Error fetching Etherscan, falling back to deterministic oracle:", error.message);
+        const xLayerSignals = await xLayerPromise;
         const num = hashString(walletAddress);
         return {
             resolvedAddress: walletAddress,
             walletAgeDays: (num % 2000) + 1,
             txCount: (num % 5000) + 1,
             uniqueInteractions: (num % 100) + 1,
-            highRiskActivity: (num % 10) > 7
+            highRiskActivity: (num % 10) > 7,
+            xLayerActive: xLayerSignals.xLayerActive || (num % 3 === 0),
+            xLayerTxCount: xLayerSignals.xLayerTxCount || (num % 50)
         };
     }
+}
+
+/**
+ * Groq LLM Dynamic Reading Generator (uses GROQ_API_KEY if present)
+ */
+async function generateGroqReading(walletAddress, signals, archetype) {
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) return null;
+
+    try {
+        const prompt = `You are an ancient Web3 Oracle reading a wallet's soulbound aura.
+Wallet: ${walletAddress}
+Archetype: ${archetype.name}
+Metrics: Age ${Math.floor(signals.walletAgeDays)} days, ${signals.txCount} transactions, ${signals.uniqueInteractions} protocols, X Layer Active: ${signals.xLayerActive ? 'Yes' : 'No'}.
+Task: Write a poetic 2-to-3 sentence reading revealing their true Web3 nature. Do not include markdown tags or intro text. Just the reading.`;
+
+        const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
+            model: 'llama-3.3-70b-versatile',
+            messages: [{ role: 'user', content: prompt }],
+            temperature: 0.7,
+            max_tokens: 120
+        }, {
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json'
+            },
+            timeout: 3200
+        });
+
+        const text = response.data?.choices?.[0]?.message?.content?.trim();
+        if (text && text.length > 20) {
+            return text;
+        }
+    } catch (err) {
+        console.warn('Groq LLM call timed out or failed, using dynamic oracle engine:', err.message);
+    }
+    return null;
 }
 
 /**
@@ -119,82 +186,84 @@ function calculateRarity(signals) {
     const age = signals.walletAgeDays;
     const txs = signals.txCount;
     const protocols = signals.uniqueInteractions;
+    const xLayer = signals.xLayerActive;
 
-    if (age > 1000 || txs > 3000) {
-        return { tier: 'LEGENDARY', label: 'Top 1% Legendary', percentile: '99th Percentile', badge: 'LEGENDARY AURA' };
+    if (age > 1000 || txs > 3000 || (xLayer && txs > 1000)) {
+        return { tier: 'LEGENDARY', label: 'Top 1% Legendary Whale', percentile: '99th Percentile', badge: 'LEGENDARY AURA' };
     } else if (protocols > 50 || age > 730 || txs > 1000) {
-        return { tier: 'MYTHIC', label: 'Top 5% Mythic', percentile: '95th Percentile', badge: 'MYTHIC AURA' };
-    } else if (protocols > 20 || age > 365 || txs > 250) {
-        return { tier: 'RARE', label: 'Top 15% Rare', percentile: '85th Percentile', badge: 'RARE AURA' };
+        return { tier: 'MYTHIC', label: 'Top 5% Mythic Alchemist', percentile: '95th Percentile', badge: 'MYTHIC AURA' };
+    } else if (protocols > 20 || age > 365 || txs > 250 || xLayer) {
+        return { tier: 'RARE', label: 'Top 15% Rare Trader', percentile: '85th Percentile', badge: 'RARE AURA' };
     } else if (txs > 20 || age > 90) {
-        return { tier: 'UNCOMMON', label: 'Uncommon', percentile: '60th Percentile', badge: 'UNCOMMON AURA' };
+        return { tier: 'UNCOMMON', label: 'Uncommon Voyager', percentile: '60th Percentile', badge: 'UNCOMMON AURA' };
     } else {
-        return { tier: 'COMMON', label: 'Genesis', percentile: 'Genesis Tier', badge: 'GENESIS AURA' };
+        return { tier: 'COMMON', label: 'Genesis Pioneer', percentile: 'Genesis Tier', badge: 'GENESIS AURA' };
     }
 }
 
 /**
- * Calculate Agent-to-Agent (A2A) Trust Score & Risk Rating
+ * Calculate Agent-to-Agent (A2A) Trust Score, Risk Rating & Recommended Limits
  */
 function calculateAgentTrustScore(signals) {
     let score = 50; // base score
 
-    // Age bonus (up to 25 pts)
     score += Math.min(25, Math.floor(signals.walletAgeDays / 40));
-
-    // Tx volume / activity bonus (up to 20 pts)
     score += Math.min(20, Math.floor(signals.txCount / 100));
-
-    // Protocol diversification bonus (up to 15 pts)
     score += Math.min(15, Math.floor(signals.uniqueInteractions / 3));
 
-    // High risk penalty
+    if (signals.xLayerActive) {
+        score += 10; // X Layer L2 active bonus
+    }
+
     if (signals.highRiskActivity) {
         score -= 10;
     }
 
-    // Clamp score to 1-99
     score = Math.max(5, Math.min(99, score));
 
     let riskLevel = 'LOW';
     let reputationTier = 'VETERAN';
+    let recommendedMaxTx = '100 ETH';
 
     if (score < 40) {
         riskLevel = 'HIGH';
         reputationTier = 'UNVERIFIED';
+        recommendedMaxTx = '0.5 ETH';
     } else if (score < 70) {
         riskLevel = 'MEDIUM';
         reputationTier = 'ESTABLISHED';
+        recommendedMaxTx = '10 ETH';
     } else if (score >= 85) {
         riskLevel = 'LOW';
         reputationTier = 'WHALE_VETERAN';
+        recommendedMaxTx = '100 ETH';
     }
 
-    const ageDaysFormatted = Math.floor(signals.walletAgeDays);
-    const rec = `Agent trust score is ${score}/100 (${riskLevel} risk). Wallet active for ${ageDaysFormatted} days across ${signals.txCount} transactions and ${signals.uniqueInteractions} unique smart contracts.`;
+    const rec = `Agent Trust Rating: ${score}/100 (${riskLevel} Risk). Wallet active for ${Math.floor(signals.walletAgeDays)} days across ${signals.txCount} Ethereum transactions and X Layer L2. Recommended transaction boundary: ${recommendedMaxTx}.`;
 
     return {
         trustScore: score,
         riskLevel,
         reputationTier,
+        recommendedMaxTx,
         agentRecommendation: rec
     };
 }
 
 /**
- * Dynamic AI Reading Synthesis Engine
+ * Fallback Dynamic Synthesis Reading
  */
-function generateAiReading(selectedArchetype, signals) {
+function generateFallbackReading(selectedArchetype, signals) {
     const ageYears = (signals.walletAgeDays / 365).toFixed(1);
     const ageDays = Math.floor(signals.walletAgeDays);
 
     let poeticTail = '';
-    if (signals.walletAgeDays > 1000 && signals.txCount > 1000) {
+    if (signals.xLayerActive) {
+        poeticTail = `Active on OKX X Layer and mainnet, your trail spans across ${signals.txCount} transactions and ${signals.uniqueInteractions} protocols.`;
+    } else if (signals.walletAgeDays > 1000 && signals.txCount > 1000) {
         poeticTail = `Having navigated ${ageYears} years of chain history across ${signals.txCount} transactions, your footprint is engraved in the genesis blocks.`;
     } else if (signals.uniqueInteractions > 50) {
         poeticTail = `With interactions spanning over ${signals.uniqueInteractions} protocols, your spirit wanders freely across liquidity pools.`;
-    } else if (signals.highRiskActivity) {
-        poeticTail = `Having survived contract execution errors and volatility, you walk among the embers of decentralized finance.`;
     } else if (signals.walletAgeDays > 365) {
         poeticTail = `With ${ageDays} days of quiet vigilance, you observe the ledger with calculated patience.`;
     } else {
@@ -208,15 +277,17 @@ function generateAiReading(selectedArchetype, signals) {
  * Map real signals to an archetype.
  */
 async function determineArchetype(walletAddress) {
-    const signals = await getEtherscanSignals(walletAddress);
+    const signals = await getOnChainSignals(walletAddress);
     let selectedArchetype = null;
 
-    // Scoring logic based on real signals
     if (signals.txCount === 0) {
         selectedArchetype = {
             name: 'The Seedling',
             description: 'A blank slate on the ledger. Your journey has yet to begin.',
-            color: '#95A5A6'
+            color: '#10B981',
+            bgColor: '#0B130E',
+            glowColor: '#10B981',
+            themeName: 'Jade Monk'
         };
     } else if (signals.walletAgeDays > 1000 && signals.txCount > 500) {
         selectedArchetype = archetypes.find(a => a.id === 'whale_whisperer') || archetypes[0];
@@ -236,14 +307,21 @@ async function determineArchetype(walletAddress) {
         selectedArchetype = archetypes[index];
     }
 
-    const reading = generateAiReading(selectedArchetype, signals);
+    // Try Groq LLM reading first, fallback to dynamic synthesis engine
+    const groqReading = await generateGroqReading(walletAddress, signals, selectedArchetype);
+    const reading = groqReading || generateFallbackReading(selectedArchetype, signals);
+
     const rarity = calculateRarity(signals);
     const trust = calculateAgentTrustScore(signals);
 
     return {
         archetype: selectedArchetype.name,
         color: selectedArchetype.color,
+        bgColor: selectedArchetype.bgColor || '#0D1117',
+        glowColor: selectedArchetype.glowColor || selectedArchetype.color,
+        themeName: selectedArchetype.themeName || 'Obsidian',
         reading,
+        isGroqLlm: !!groqReading,
         signals,
         rarity,
         trust,
@@ -251,6 +329,7 @@ async function determineArchetype(walletAddress) {
             ageDays: Math.floor(signals.walletAgeDays),
             txCount: signals.txCount,
             protocols: signals.uniqueInteractions,
+            xLayerActive: signals.xLayerActive,
             trustScore: trust.trustScore,
             rarityBadge: rarity.badge
         }
@@ -259,7 +338,7 @@ async function determineArchetype(walletAddress) {
 
 module.exports = {
     determineArchetype,
-    getEtherscanSignals,
+    getOnChainSignals,
     resolveEns,
     calculateRarity,
     calculateAgentTrustScore

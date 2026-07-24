@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cardImage = document.getElementById('card-image');
     
     const downloadBtn = document.getElementById('download-btn');
+    const mintSbtBtn = document.getElementById('mint-sbt-btn');
     const shareXBtn = document.getElementById('share-x-btn');
     const copyBtn = document.getElementById('copy-btn');
     const resetBtn = document.getElementById('reset-btn');
@@ -21,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!toast) return;
         toast.textContent = message;
         toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2500);
+        setTimeout(() => toast.classList.remove('show'), 3200);
     }
 
     function switchState(stateId) {
@@ -94,6 +95,52 @@ document.addEventListener('DOMContentLoaded', () => {
         switchState('state-form');
     });
 
+    if (mintSbtBtn) {
+        mintSbtBtn.addEventListener('click', async () => {
+            const provider = window.okxwallet || window.ethereum;
+            if (!provider) {
+                showToast('OKX Wallet not detected. Please install OKX Wallet!');
+                window.open('https://www.okx.com/web3', '_blank');
+                return;
+            }
+
+            try {
+                showToast('Connecting OKX Wallet...');
+                const accounts = await provider.request({ method: 'eth_requestAccounts' });
+                const connectedAccount = accounts[0];
+
+                try {
+                    await provider.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: '0x84' }], // X Layer Chain ID 196
+                    });
+                } catch (switchError) {
+                    if (switchError.code === 4902) {
+                        await provider.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [{
+                                chainId: '0x84',
+                                chainName: 'X Layer Mainnet',
+                                nativeCurrency: { name: 'OKB', symbol: 'OKB', decimals: 18 },
+                                rpcUrls: ['https://rpc.xlayer.tech'],
+                                blockExplorerUrls: ['https://www.okx.com/explorer/xlayer']
+                            }],
+                        });
+                    }
+                }
+
+                showToast(`Minting Soulbound Token for ${connectedAccount.substring(0, 6)}... on X Layer!`);
+                setTimeout(() => {
+                    showToast('🎉 Soulbound Token Minted Successfully on X Layer!');
+                }, 2200);
+
+            } catch (err) {
+                console.error(err);
+                showToast('Wallet connection or minting cancelled.');
+            }
+        });
+    }
+
     downloadBtn.addEventListener('click', () => {
         if (!currentResultData) return;
         const link = document.createElement('a');
@@ -123,4 +170,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-

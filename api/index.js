@@ -73,7 +73,10 @@ function buildDeliverableList(walletAddress, archetypeData, svg, baseUrl) {
             wallet: walletAddress,
             archetype: archetypeData.archetype,
             color: archetypeData.color,
+            bgColor: archetypeData.bgColor,
+            themeName: archetypeData.themeName,
             reading: archetypeData.reading,
+            isGroqLlm: archetypeData.isGroqLlm,
             rarity: archetypeData.rarity,
             trust: archetypeData.trust,
             stats: archetypeData.stats
@@ -94,7 +97,7 @@ function send402Challenge(req, res) {
         error: 'Payment Required',
         resource: {
             url: `${baseUrl}${req.originalUrl || '/aura'}`,
-            description: 'Agent Aura - Web3 Archetype Reader & Trust Oracle'
+            description: 'Agent Aura - AI Web3 Archetype & Trust Oracle (Groq LLM Powered)'
         },
         accepts: [
             {
@@ -128,8 +131,8 @@ app.get(['/.well-known/mcp.json', '/manifest'], (req, res) => {
     const baseUrl = getBaseUrl(req);
     res.json({
         name: "Agent Aura",
-        description: "An on-chain AI oracle that reads wallet history, reveals unique web3 archetypes, and provides Agent-to-Agent trust ratings.",
-        version: "1.2.0",
+        description: "An on-chain Groq LLM-powered AI oracle that reads wallet history, generates dynamic holographic SVG cards, and provides Agent-to-Agent trust ratings on OKX X Layer.",
+        version: "2.0.0",
         services: [
             {
                 serviceName: "Wallet Aura Reader",
@@ -196,10 +199,14 @@ async function handleAuraRequest(req, res) {
             wallet_address: walletAddress,
             archetype: archetypeData.archetype,
             reading: archetypeData.reading,
+            is_groq_llm: archetypeData.isGroqLlm,
+            theme_name: archetypeData.themeName,
+            bg_color: archetypeData.bgColor,
             rarity: archetypeData.rarity,
             trust_score: archetypeData.trust.trustScore,
             risk_level: archetypeData.trust.riskLevel,
             reputation_tier: archetypeData.trust.reputationTier,
+            recommended_max_tx: archetypeData.trust.recommendedMaxTx,
             agent_recommendation: archetypeData.trust.agentRecommendation,
             card_svg_url: `${baseUrl}/card?wallet=${encodeURIComponent(walletAddress)}`,
             card_image_base64: `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`,
@@ -235,8 +242,11 @@ app.get(['/api/agent-trust-score', '/trust-score'], async (req, res) => {
             trust_score: archetypeData.trust.trustScore,
             risk_level: archetypeData.trust.riskLevel,
             reputation_tier: archetypeData.trust.reputationTier,
+            recommended_max_tx: archetypeData.trust.recommendedMaxTx,
             agent_recommendation: archetypeData.trust.agentRecommendation,
             rarity: archetypeData.rarity,
+            xlayer_active: archetypeData.signals.xLayerActive,
+            is_groq_llm: archetypeData.isGroqLlm,
             signals: archetypeData.signals
         });
     } catch (error) {
