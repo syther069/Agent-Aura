@@ -1,230 +1,360 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="light" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AGENT AURA — The Opticks of Reputation & Crystallographic Oracle / OKX X Layer</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>AGENT AURA | THE LEDGER REMEMBERS</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;600&family=IBM+Plex+Mono:wght@400;500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@100..900&family=IBM+Plex+Mono:wght@100..900&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#c7c6c4",
+                        "inverse-primary": "#c9c6c4",
+                        "on-primary-fixed": "#1c1c1a",
+                        "secondary": "#5e5e5c",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#fbf9f5",
+                        "on-tertiary-fixed": "#1b1c1b",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed": "#1b1c1a",
+                        "surface-container": "#efeeea",
+                        "background": "#fbf9f5",
+                        "primary": "#000000",
+                        "surface-container-highest": "#e4e2de",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#636360",
+                        "surface-tint": "#5f5e5d",
+                        "inverse-surface": "#30312e",
+                        "outline-variant": "#c7c7c0",
+                        "on-secondary-fixed-variant": "#474744",
+                        "secondary-fixed-dim": "#c8c6c3",
+                        "surface-variant": "#e4e2de",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "outline": "#777871",
+                        "surface-dim": "#dbdad6",
+                        "tertiary": "#000000",
+                        "on-tertiary-container": "#848482",
+                        "primary-fixed-dim": "#c9c6c4",
+                        "secondary-container": "#e1dfdc",
+                        "on-error-container": "#93000a",
+                        "on-background": "#1b1c1a",
+                        "primary-fixed": "#e5e2e0",
+                        "on-primary-fixed-variant": "#474745",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#eae8e4",
+                        "on-surface-variant": "#464742",
+                        "inverse-on-surface": "#f2f0ec",
+                        "on-primary-container": "#858382",
+                        "on-surface": "#1b1c1a",
+                        "secondary-fixed": "#e4e2de",
+                        "tertiary-container": "#1b1c1b",
+                        "on-tertiary-fixed-variant": "#464745",
+                        "primary-container": "#1c1c1a",
+                        "surface": "#fbf9f5",
+                        "tertiary-fixed": "#e3e2e0",
+                        "surface-container-low": "#f5f3ef"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "gutter": "24px",
+                        "unit": "4px",
+                        "margin-mobile": "16px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "label-mono": ["IBM Plex Mono"],
+                        "headline-xl": ["Fraunces"],
+                        "body-lg": ["Fraunces"],
+                        "headline-lg": ["Fraunces"],
+                        "data-mono": ["IBM Plex Mono"],
+                        "headline-xl-mobile": ["Fraunces"],
+                        "body-md": ["Fraunces"]
+                    },
+                    "fontSize": {
+                        "label-mono": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "400"}],
+                        "headline-xl": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "300"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "300"}],
+                        "data-mono": ["14px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                        "headline-xl-mobile": ["40px", {"lineHeight": "1.1", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "300"}]
+                    }
+                },
+            },
+        }
+    </script>
     <link rel="stylesheet" href="/style.css">
 </head>
-<body>
-    <!-- Reticle Retaining Reticle Grid & Geometric Crystal Caustics -->
-    <div class="liquid-bg-container" aria-hidden="true">
-        <svg class="caustic-reticle-svg" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <pattern id="reticleGrid" width="40" height="40" patternUnits="userSpaceOnUse">
-                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(30,30,30,0.04)" stroke-width="0.5"/>
-                </pattern>
-                <pattern id="causticRays" width="240" height="240" patternUnits="userSpaceOnUse">
-                    <path d="M 0 120 Q 60 40 120 120 T 240 120" fill="none" stroke="rgba(232,213,183,0.35)" stroke-width="1"/>
-                    <path d="M 120 0 Q 40 60 120 120 T 120 240" fill="none" stroke="rgba(200,220,235,0.25)" stroke-width="0.8"/>
-                    <circle cx="120" cy="120" r="2" fill="rgba(30,30,30,0.15)"/>
-                </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#reticleGrid)"/>
-            <rect width="100%" height="100%" fill="url(#causticRays)" opacity="0.7"/>
-        </svg>
-    </div>
-
-    <!-- Sticky Glass Instrument Navbar -->
-    <header class="top-nav">
-        <div class="nav-brand">
-            <span class="brand-title">Agent Aura</span>
-            <span class="edition-tag">◇ APPARATUS 196</span>
+<body class="text-on-background font-body-md overflow-x-hidden">
+    <!-- TopNavBar Navigation Shell -->
+    <nav class="fixed top-0 left-0 w-full z-50 bg-background border-b border-primary">
+        <div class="flex justify-between items-center w-full px-4 md:px-margin-desktop py-4 max-w-container-max mx-auto">
+            <div class="font-headline-lg text-[24px] md:text-headline-lg tracking-tighter text-primary">AGENT AURA</div>
+            <div class="hidden md:flex items-center gap-8">
+                <a class="font-label-mono text-label-mono uppercase tracking-widest text-primary border-b-2 border-primary" href="#">READINGS</a>
+                <a class="font-label-mono text-label-mono uppercase tracking-widest text-secondary hover:line-through" href="#gallery-section">ARCHIVE</a>
+                <a class="font-label-mono text-label-mono uppercase tracking-widest text-secondary hover:line-through" href="#manifesto-section">MANIFESTO</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="font-label-mono text-label-mono uppercase hidden lg:inline">◇ OKX X-LAYER (196)</span>
+                <button id="header-connect-btn" class="bg-primary text-on-primary font-label-mono text-label-mono uppercase px-6 py-3 hover:invert transition-all duration-75">
+                    CONNECT WALLET
+                </button>
+            </div>
         </div>
-        
-        <div class="nav-right">
-            <div class="theme-selector-group" id="theme-selector">
-                <button type="button" class="theme-pill-btn active" data-theme-id="obsidian" title="Rice Paper Theme">Rice Paper</button>
-                <button type="button" class="theme-pill-btn" data-theme-id="graphite" title="Warm Linen Theme">Warm Linen</button>
-                <button type="button" class="theme-pill-btn" data-theme-id="platinum" title="Pure Snow Theme">Pure Snow</button>
-                <button type="button" class="theme-pill-btn" data-theme-id="abyssal" title="Cool Porcelain Theme">Porcelain</button>
-            </div>
-            <div class="status-chip desktop-only">
-                <span class="chip-dot"></span>
-                <span class="chip-val">OPTICAL ORACLE ACTIVE</span>
-            </div>
-            <button type="button" class="btn-connect" id="header-connect-btn">ENGAGE APPARATUS</button>
+    </nav>
+
+    <!-- Main Editorial Canvas -->
+    <main class="relative pt-32 pb-margin-desktop px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto min-h-screen">
+        <!-- Background Grid Lines (Architectural) -->
+        <div class="fixed inset-0 pointer-events-none opacity-5">
+            <div class="grid-line-v left-margin-desktop"></div>
+            <div class="grid-line-v right-margin-desktop"></div>
+            <div class="grid-line-h top-32"></div>
         </div>
-    </header>
 
-    <div class="main-container" id="app">
-        
-        <!-- Form State View -->
-        <main class="state-form active" id="state-form">
-            <div class="hero-section">
-                <span class="hero-kicker">◇ THE OPTICKS OF REPUTATION ◇</span>
-                <h1 class="hero-title">Decrypt Your Resonance.</h1>
-                <p class="hero-desc">
-                    A precision optical instrument for deciphering the spectral refraction of cryptographic identity. Every wallet is a lens; every transaction is a photon.
-                </p>
-                
-                <!-- Specimen Input Vessel -->
-                <form id="aura-form" class="glass-search-container">
-                    <div class="input-wrapper">
-                        <label for="wallet-input" class="input-micro-label">SPECIMEN ADDRESS OR RESOLVED ENS</label>
-                        <input type="text" id="wallet-input" placeholder="0x... or vitalik.eth" required autocomplete="off" spellcheck="false">
+        <!-- FORM STATE VIEW -->
+        <div id="state-form" class="state-view active">
+            <!-- Hero Section -->
+            <section class="grid grid-cols-1 md:grid-cols-12 gap-gutter mb-16 relative">
+                <div class="md:col-span-8 flex flex-col justify-center">
+                    <div class="flex items-center gap-2 mb-6 text-primary">
+                        <span class="font-label-mono text-label-mono uppercase tracking-widest">// ON-CHAIN BEHAVIORAL INTELLIGENCE</span>
+                        <span class="text-[10px]">◇</span>
+                        <span class="font-label-mono text-label-mono uppercase tracking-widest">MAINNET_SCAN.v1</span>
                     </div>
-                    <button type="submit" class="btn-reveal">
-                        <span>OBSERVE REFRACTION</span>
-                        <svg class="btn-svg-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                    </button>
-                </form>
-
-                <!-- Demo Triggers -->
-                <div class="demo-chips">
-                    <span class="chips-label">SPECIMEN TARGETS:</span>
-                    <button type="button" class="chip-btn" data-wallet="vitalik.eth">vitalik.eth</button>
-                    <button type="button" class="chip-btn" data-wallet="0x28c6c06298d514db089934071355e5743bf21d60">Binance Hot</button>
-                    <button type="button" class="chip-btn" data-wallet="0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045">OG Whale</button>
+                    <h1 class="font-headline-xl text-headline-xl-mobile md:text-headline-xl mb-8 leading-none">
+                        THE LEDGER<br/>REMEMBERS.
+                    </h1>
+                    <p class="font-body-lg text-body-lg md:max-w-xl text-secondary">
+                        A single call to reveal your on-chain aura. No signatures, no permissions, just pure ledger observation. Agent Aura extracts signals to surface your Web3 archetype.
+                    </p>
                 </div>
-            </div>
-
-            <!-- Hall of Fame Specimen Gallery Section -->
-            <section class="hall-of-fame-section">
-                <div class="section-header">
-                    <span class="section-kicker">◇ ON-CHAIN SPECIMENS ◇</span>
-                    <h2 class="section-title">Specimen Gallery</h2>
-                </div>
-
-                <div class="fame-grid">
-                    <div class="fame-card" data-wallet="vitalik.eth">
-                        <div class="fame-top">
-                            <span class="fame-address">vitalik.eth</span>
-                            <span class="fame-rarity">✦ LEGENDARY</span>
-                        </div>
-                        <h4 class="fame-archetype">OG Whale Whisperer</h4>
-                        <p class="fame-quote">"Architect of the ledger, weaving smart contract lore across Ethereum & X Layer."</p>
-                        <div class="fame-foot">
-                            <span>RESONANCE 90%</span>
-                            <span class="fame-action">OBSERVE →</span>
-                        </div>
-                    </div>
-
-                    <div class="fame-card" data-wallet="0x28c6c06298d514db089934071355e5743bf21d60">
-                        <div class="fame-top">
-                            <span class="fame-address">Binance Hot</span>
-                            <span class="fame-rarity">✦ MYTHIC</span>
-                        </div>
-                        <h4 class="fame-archetype">Yield Alchemist</h4>
-                        <p class="fame-quote">"Master of liquidity pools, moving billions in silent atomic precision."</p>
-                        <div class="fame-foot">
-                            <span>RESONANCE 95%</span>
-                            <span class="fame-action">OBSERVE →</span>
-                        </div>
-                    </div>
-
-                    <div class="fame-card" data-wallet="0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045">
-                        <div class="fame-top">
-                            <span class="fame-address">0xd8d...6045</span>
-                            <span class="fame-rarity">✦ MYTHIC</span>
-                        </div>
-                        <h4 class="fame-archetype">Diamond Mystic</h4>
-                        <p class="fame-quote">"Unbroken conviction amidst bear market liquidations, holding genesis vault keys."</p>
-                        <div class="fame-foot">
-                            <span>RESONANCE 92%</span>
-                            <span class="fame-action">OBSERVE →</span>
+                <div class="md:col-span-4 flex justify-end items-end">
+                    <div class="border border-primary p-4 bg-surface-container-lowest w-full md:w-auto">
+                        <div class="font-label-mono text-label-mono uppercase text-secondary-fixed-variant mb-2">SYSTEM_STATUS</div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 bg-primary animate-pulse"></div>
+                            <span class="font-label-mono text-label-mono uppercase">ORACLE: GROQ LLM ACTIVE</span>
                         </div>
                     </div>
                 </div>
             </section>
-        </main>
 
-        <!-- Loading State View -->
-        <main class="state-loading" id="state-loading">
-            <div class="loading-glass-card">
-                <div class="spinner-ring"></div>
-                <h3 class="loading-title">Refracting cryptographic photons...</h3>
-                <p class="loading-desc">Calibrating spectral reticle across E-155 protocol layers.</p>
-            </div>
-        </main>
-
-        <!-- Result Dashboard View -->
-        <main class="state-result" id="state-result">
-            <div class="result-layout">
-                <div class="result-header">
-                    <div class="meta-titles">
-                        <span class="meta-kicker">◇ SPECIMEN REFRACTION COMPLETE ◇</span>
-                        <h2 class="result-main-title">Resonance Aligned</h2>
+            <!-- Search & Input Section -->
+            <section class="mb-24 relative">
+                <form id="aura-form" class="border border-primary bg-background p-8 md:p-12 relative overflow-hidden">
+                    <!-- Corner Motifs -->
+                    <div class="absolute top-0 left-0 w-2 h-2 border-t border-l border-primary"></div>
+                    <div class="absolute top-0 right-0 w-2 h-2 border-t border-r border-primary"></div>
+                    <div class="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-primary"></div>
+                    <div class="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-primary"></div>
+                    
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 border-b border-primary pb-4">
+                        <div class="font-label-mono text-label-mono uppercase tracking-widest text-primary">// INPUT TARGET ADDRESS</div>
+                        <div class="font-label-mono text-label-mono uppercase text-secondary">MODE: ON-CHAIN SCAN</div>
                     </div>
-                    <div class="badge-group" id="badge-row">
-                        <span class="rarity-pill" id="rarity-badge">◇ LEGENDARY ◇</span>
-                        <span class="trust-pill" id="trust-badge">RESONANCE 95%</span>
+                    
+                    <div class="relative mb-10">
+                        <label for="wallet-input" class="font-label-mono text-label-mono uppercase text-secondary mb-4 block">ENTER WALLET ADDRESS OR ENS DOMAIN</label>
+                        <input id="wallet-input" class="w-full bg-transparent border-b border-primary py-6 text-[22px] md:text-headline-lg font-headline-lg focus:outline-none focus:border-b-2 placeholder:text-surface-container-highest transition-all" placeholder="0x... or vitalik.eth" type="text" required autocomplete="off" spellcheck="false"/>
                     </div>
-                </div>
-
-                <!-- Glass Specimen Slide Frame -->
-                <div class="card-glass-frame">
-                    <div class="aura-glow-backdrop"></div>
-                    <img id="card-image" src="" alt="Agent Aura Specimen Slide">
-                </div>
-
-                <!-- Precision Optical Console -->
-                <div class="liquid-console-wrapper" id="trust-matrix">
-                    <!-- Trust Matrix Header & Metrics -->
-                    <div class="liquid-matrix-section">
-                        <div class="matrix-top-bar">
-                            <div class="matrix-title-group">
-                                <span class="matrix-shield-icon">◇</span>
-                                <span class="matrix-title">AGENT-TO-AGENT (A2A) REPUTATION APPARATUS</span>
-                            </div>
-                            <span class="matrix-status-pill" id="matrix-risk">RISK INDEX: OPTIMAL</span>
-                        </div>
-                        <div class="matrix-grid">
-                            <div class="matrix-item">
-                                <span class="m-label">REPUTATION CLASSIFICATION</span>
-                                <span class="m-val" id="m-tier">VETERAN</span>
-                            </div>
-                            <div class="matrix-item">
-                                <span class="m-label">RECOMMENDED MAX FLOW</span>
-                                <span class="m-val" id="m-limit">100.0 ETH</span>
-                            </div>
-                            <div class="matrix-item">
-                                <span class="m-label">OKX X-LAYER RETICLE</span>
-                                <span class="m-val" id="m-xlayer">ACTIVE (CHAIN 196)</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Subtle Liquid Divider -->
-                    <div class="liquid-console-divider"></div>
-
-                    <!-- Action Console Section -->
-                    <div class="liquid-action-section">
-                        <button id="mint-sbt-btn" class="btn-liquid-primary">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                            <span>MINT SBT ON OKX X LAYER</span>
-                            <svg class="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    
+                    <div class="flex flex-wrap gap-4 items-center mb-10">
+                        <span class="font-label-mono text-label-mono uppercase text-secondary">TRY DEMO TARGETS:</span>
+                        <button type="button" class="chip-btn border border-primary px-4 py-2 font-label-mono text-label-mono uppercase hover:bg-primary hover:text-white transition-all flex items-center gap-2" data-wallet="vitalik.eth">
+                            <span class="material-symbols-outlined text-[14px]">bolt</span> vitalik.eth
                         </button>
-                        <div class="liquid-btn-row">
-                            <button id="download-btn" class="btn-liquid-secondary">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-                                <span>SPECIMEN SVG</span>
-                            </button>
-                            <button id="share-x-btn" class="btn-liquid-secondary">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                                <span>SHARE ON X</span>
-                            </button>
-                            <button id="copy-btn" class="btn-liquid-secondary">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-                                <span>COPY LINK</span>
-                            </button>
-                        </div>
-                        <button id="reset-btn" class="btn-liquid-ghost">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-                            <span>EXAMINE NEW SPECIMEN</span>
+                        <button type="button" class="chip-btn border border-primary px-4 py-2 font-label-mono text-label-mono uppercase hover:bg-primary hover:text-white transition-all flex items-center gap-2" data-wallet="0x28c6c06298d514db089934071355e5743bf21d60">
+                            <span class="material-symbols-outlined text-[14px]">token</span> Binance Hot
+                        </button>
+                        <button type="button" class="chip-btn border border-primary px-4 py-2 font-label-mono text-label-mono uppercase hover:bg-primary hover:text-white transition-all flex items-center gap-2" data-wallet="0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045">
+                            <span class="material-symbols-outlined text-[14px]">waves</span> OG Whale
                         </button>
                     </div>
-                </div>
-            </div>
-        </main>
+                    
+                    <button type="submit" id="submit-btn" class="w-full bg-primary text-white py-6 font-label-mono text-label-mono uppercase text-[16px] tracking-[0.2em] hover:bg-secondary transition-all">
+                        REVEAL YOUR AURA
+                    </button>
+                </form>
+            </section>
 
-    </div>
+            <!-- Hall of Fame Gallery Section -->
+            <section id="gallery-section" class="border-t border-primary pt-16">
+                <div class="flex justify-between items-center mb-12">
+                    <div>
+                        <span class="font-label-mono text-label-mono uppercase text-secondary">// ARCHIVED RESONANCES</span>
+                        <h2 class="font-headline-lg text-headline-lg">SPECIMEN GALLERY</h2>
+                    </div>
+                    <span class="font-label-mono text-label-mono uppercase text-secondary">◇ 3 ARCHETYPES INDEXED</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="fame-card border border-primary bg-white p-6 cursor-pointer hover:border-black hover:shadow-lg transition-all" data-wallet="vitalik.eth">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="font-label-mono text-label-mono text-primary font-bold">vitalik.eth</span>
+                            <span class="font-label-mono text-[10px] text-secondary border border-primary px-2 py-1">LEGENDARY</span>
+                        </div>
+                        <h4 class="font-headline-lg text-[22px] mb-2">OG Whale Whisperer</h4>
+                        <p class="font-body-md text-[14px] text-secondary mb-6">"Architect of the ledger, weaving smart contract lore across Ethereum & X Layer."</p>
+                        <div class="flex justify-between items-center font-label-mono text-label-mono text-primary border-t border-primary pt-4">
+                            <span>RESONANCE 90%</span>
+                            <span class="font-bold">INSPECT →</span>
+                        </div>
+                    </div>
+
+                    <div class="fame-card border border-primary bg-white p-6 cursor-pointer hover:border-black hover:shadow-lg transition-all" data-wallet="0x28c6c06298d514db089934071355e5743bf21d60">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="font-label-mono text-label-mono text-primary font-bold">Binance Hot</span>
+                            <span class="font-label-mono text-[10px] text-secondary border border-primary px-2 py-1">MYTHIC</span>
+                        </div>
+                        <h4 class="font-headline-lg text-[22px] mb-2">Yield Alchemist</h4>
+                        <p class="font-body-md text-[14px] text-secondary mb-6">"Master of liquidity pools, moving billions in silent atomic precision."</p>
+                        <div class="flex justify-between items-center font-label-mono text-label-mono text-primary border-t border-primary pt-4">
+                            <span>RESONANCE 95%</span>
+                            <span class="font-bold">INSPECT →</span>
+                        </div>
+                    </div>
+
+                    <div class="fame-card border border-primary bg-white p-6 cursor-pointer hover:border-black hover:shadow-lg transition-all" data-wallet="0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="font-label-mono text-label-mono text-primary font-bold">0xd8d...6045</span>
+                            <span class="font-label-mono text-[10px] text-secondary border border-primary px-2 py-1">MYTHIC</span>
+                        </div>
+                        <h4 class="font-headline-lg text-[22px] mb-2">Diamond Mystic</h4>
+                        <p class="font-body-md text-[14px] text-secondary mb-6">"Unbroken conviction amidst bear market liquidations, holding genesis vault keys."</p>
+                        <div class="flex justify-between items-center font-label-mono text-label-mono text-primary border-t border-primary pt-4">
+                            <span>RESONANCE 92%</span>
+                            <span class="font-bold">INSPECT →</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Manifesto Section -->
+            <section id="manifesto-section" class="border-t border-primary mt-24 pt-16">
+                <div class="max-w-2xl">
+                    <span class="font-label-mono text-label-mono uppercase text-secondary">// ARCHIVAL MANIFESTO</span>
+                    <h2 class="font-headline-lg text-headline-lg mb-6">THE OPTICKS OF REPUTATION</h2>
+                    <p class="font-body-lg text-body-lg text-secondary leading-relaxed mb-6">
+                        Agent Aura is a precision instrument for observing the refraction of cryptographic identity. Every wallet address is a unique lens; every transaction is a photon passing through the decentralized ledger.
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <!-- LOADING STATE VIEW -->
+        <div id="state-loading" class="state-view hidden py-24">
+            <div class="border border-primary bg-white p-12 text-center max-w-xl mx-auto">
+                <div class="w-8 h-8 bg-primary animate-pulse mx-auto mb-6"></div>
+                <h3 class="font-headline-lg text-headline-lg mb-4 uppercase">ORACLE: DECONSTRUCTING SIGNATURES...</h3>
+                <p class="font-label-mono text-label-mono text-secondary uppercase">Parsing block records across E-155 protocol layers & OKX X Layer (Chain 196)</p>
+            </div>
+        </div>
+
+        <!-- RESULT STATE VIEW -->
+        <div id="state-result" class="state-view hidden">
+            <!-- Oracle Display / Card Section -->
+            <section class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+                <!-- Left Metadata -->
+                <div class="lg:col-span-3 space-y-12">
+                    <div>
+                        <div class="font-label-mono text-label-mono uppercase text-primary border-b border-primary pb-2 mb-4">ARCHETYPE_PROTOCOLS</div>
+                        <ul class="space-y-4 font-label-mono text-label-mono text-secondary">
+                            <li class="flex justify-between items-center"><span>◇ REPUTATION_TIER</span> <span id="m-tier" class="font-bold text-primary">VETERAN</span></li>
+                            <li class="flex justify-between items-center"><span>◇ RECOMMENDED_MAX</span> <span id="m-limit" class="font-bold text-primary">100.0 ETH</span></li>
+                            <li class="flex justify-between items-center"><span>◇ OKX_X_LAYER</span> <span id="m-xlayer" class="font-bold text-primary">ACTIVE (196)</span></li>
+                        </ul>
+                    </div>
+                    <div class="bg-primary text-white p-6">
+                        <div class="font-label-mono text-label-mono uppercase mb-4 opacity-70">A2A_RISK_MATRIX</div>
+                        <div id="matrix-risk" class="font-headline-lg text-[24px] mb-2 uppercase">RISK LEVEL: OPTIMAL</div>
+                        <div class="font-label-mono text-[10px] uppercase tracking-widest opacity-50">STABLE NETWORK CONDITIONS</div>
+                    </div>
+                </div>
+
+                <!-- Central Card Display -->
+                <div class="lg:col-span-6 flex justify-center relative">
+                    <div class="relative group card-glass-frame cursor-pointer">
+                        <!-- Frame decoration -->
+                        <div class="absolute -inset-8 border border-primary opacity-20 pointer-events-none"></div>
+                        <div class="absolute -inset-4 border border-primary opacity-40 pointer-events-none"></div>
+                        <div class="border border-primary bg-white p-2 shadow-sm transition-transform duration-700 group-hover:scale-[1.02]">
+                            <img id="card-image" alt="The Observer Web3 Tarot Card" class="w-[400px] h-auto block grayscale hover:grayscale-0 transition-all duration-1000" src=""/>
+                        </div>
+                        <!-- Floating Metadata Labels -->
+                        <div class="absolute -right-16 top-1/4 transform rotate-90 origin-left">
+                            <span id="rarity-badge" class="font-label-mono text-label-mono uppercase tracking-[0.4em] text-primary">COLLECTIBLE_ID: #88219</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Reading Text -->
+                <div class="lg:col-span-3 space-y-8">
+                    <div class="flex justify-between items-center border-b border-primary pb-2">
+                        <span class="font-label-mono text-label-mono uppercase text-primary">THE_READING</span>
+                        <span id="trust-badge" class="font-label-mono text-[10px] bg-primary text-white px-2 py-0.5 uppercase">RESONANCE 95%</span>
+                    </div>
+                    <h3 id="result-archetype" class="font-headline-lg text-headline-lg uppercase">THE OBSERVER</h3>
+                    <p id="result-reading" class="font-body-md text-body-md text-secondary leading-relaxed">
+                        You exist on the periphery of chaos, watching the order flow through the pipes. Your wallet speaks of patience—long-term holdings punctuated by sudden, precise movements. You are not a trader; you are a curator of chain history.
+                    </p>
+                    
+                    <!-- Action Console Controls -->
+                    <div class="pt-6 space-y-4">
+                        <button id="mint-sbt-btn" class="w-full bg-primary text-white py-4 font-label-mono text-label-mono uppercase tracking-widest hover:bg-secondary transition-all flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-[16px]">bolt</span> MINT SBT ON OKX X LAYER
+                        </button>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button id="download-btn" class="border border-primary py-3 font-label-mono text-[10px] uppercase hover:bg-primary hover:text-white transition-all">
+                                SVG CARD
+                            </button>
+                            <button id="share-x-btn" class="border border-primary py-3 font-label-mono text-[10px] uppercase hover:bg-primary hover:text-white transition-all">
+                                SHARE X
+                            </button>
+                            <button id="copy-btn" class="border border-primary py-3 font-label-mono text-[10px] uppercase hover:bg-primary hover:text-white transition-all">
+                                COPY LINK
+                            </button>
+                        </div>
+                        <button id="reset-btn" class="w-full border border-primary py-3 font-label-mono text-label-mono uppercase text-secondary hover:text-primary hover:border-black transition-all">
+                            ◇ EXAMINE NEW SPECIMEN
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer Shell -->
+    <footer class="bg-background border-t border-primary mt-32">
+        <div class="flex flex-col md:flex-row justify-between items-center w-full px-4 md:px-margin-desktop py-12 max-w-container-max mx-auto gap-8">
+            <div class="font-headline-lg text-headline-lg text-primary tracking-tighter">AGENT AURA</div>
+            <div class="font-label-mono text-label-mono uppercase text-center md:text-left">
+                © 2026 AGENT AURA ◇ THE LEDGER REMEMBERS.
+            </div>
+            <div class="flex gap-8">
+                <a class="font-label-mono text-label-mono uppercase text-secondary-fixed-variant hover:text-primary" href="#">PRIVACY</a>
+                <a class="font-label-mono text-label-mono uppercase text-secondary-fixed-variant hover:text-primary" href="#">TERMS</a>
+                <a class="font-label-mono text-label-mono uppercase text-secondary-fixed-variant hover:text-primary" href="#">PROVENANCE</a>
+            </div>
+        </div>
+    </footer>
 
     <!-- Toast Notification -->
-    <div id="toast" class="toast"></div>
+    <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-primary text-white font-label-mono text-label-mono px-6 py-3 border border-black shadow-lg opacity-0 invisible transition-all duration-300 z-50"></div>
 
     <script src="/app.js"></script>
 </body>

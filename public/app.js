@@ -213,13 +213,22 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const rarityBadge = document.getElementById('rarity-badge');
             const trustBadge = document.getElementById('trust-badge');
+            const resultArchetype = document.getElementById('result-archetype');
+            const resultReading = document.getElementById('result-reading');
+
+            if (resultArchetype && data.archetype) {
+                resultArchetype.textContent = data.archetype.name || data.archetype;
+            }
+            if (resultReading && data.reading) {
+                resultReading.textContent = data.reading;
+            }
             
             if (rarityBadge && data.rarity) {
-                rarityBadge.textContent = `◇ ${data.rarity.badge || data.rarity.label || 'RARE AURA'} ◇`;
+                rarityBadge.textContent = `COLLECTIBLE_ID: #${data.rarity.id || '88219'}`;
             }
             if (trustBadge && (data.trust_score || data.stats?.trustScore)) {
                 const targetScore = data.trust_score || data.stats?.trustScore;
-                animateValue(trustBadge, 0, targetScore, 1000, 'TRUST SCORE ', '/100');
+                animateValue(trustBadge, 0, targetScore, 1000, 'RESONANCE ', '%');
             }
 
             // Populate Agent-to-Agent (A2A) Trust Matrix Panel
@@ -229,12 +238,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const mXLayer = document.getElementById('m-xlayer');
 
             if (data.trust) {
-                if (mRisk) mRisk.textContent = `RISK LEVEL: ${data.trust.riskLevel || 'LOW'}`;
+                if (mRisk) mRisk.textContent = `RISK LEVEL: ${data.trust.riskLevel || 'OPTIMAL'}`;
                 if (mTier) mTier.textContent = data.trust.reputationTier || 'VETERAN';
                 if (mLimit) mLimit.textContent = data.trust.recommendedMaxTx || '100.0 ETH';
             }
             if (mXLayer) {
-                mXLayer.textContent = data.stats?.xLayerActive ? 'ACTIVE (CHAIN 196)' : 'MAINNET OBSERVER';
+                mXLayer.textContent = data.stats?.xLayerActive ? 'ACTIVE (196)' : 'MAINNET OBSERVER';
             }
 
             setTimeout(() => {
