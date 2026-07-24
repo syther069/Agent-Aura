@@ -1,58 +1,80 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // 🎯 DOM Element References
     const stateForm = document.getElementById('state-form');
     const stateLoading = document.getElementById('state-loading');
     const stateResult = document.getElementById('state-result');
     
     const form = document.getElementById('aura-form');
     const input = document.getElementById('wallet-input');
+    const inputBadge = document.getElementById('input-detection-badge');
     const cardImage = document.getElementById('card-image');
     const cardFrame = document.querySelector('.card-glass-frame');
-    const glowBackdrop = document.querySelector('.aura-glow-backdrop');
     
     const downloadBtn = document.getElementById('download-btn');
     const mintSbtBtn = document.getElementById('mint-sbt-btn');
     const shareXBtn = document.getElementById('share-x-btn');
     const copyBtn = document.getElementById('copy-btn');
     const resetBtn = document.getElementById('reset-btn');
+    const inspectModalBtn = document.getElementById('inspect-modal-btn');
     const toast = document.getElementById('toast');
     const chipBtns = document.querySelectorAll('.chip-btn');
     const fameCards = document.querySelectorAll('.fame-card');
     const headerConnectBtn = document.getElementById('header-connect-btn');
-    const themePillBtns = document.querySelectorAll('.theme-pill-btn');
 
     let currentResultData = null;
     let currentWallet = '';
 
-    // 💧 Liquid Glass Theme Controller
-    const savedTheme = localStorage.getItem('agent_aura_theme') || 'obsidian';
-
-    function setTheme(themeId) {
-        document.documentElement.setAttribute('data-theme', themeId);
-        localStorage.setItem('agent_aura_theme', themeId);
-        
-        themePillBtns.forEach(btn => {
-            if (btn.dataset.themeId === themeId) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
-        });
+    // 🍞 Toast Notification Helper
+    function showToast(message, isHtml = false) {
+        if (!toast) return;
+        if (isHtml) {
+            toast.innerHTML = message;
+        } else {
+            toast.textContent = message;
+        }
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 5000);
     }
 
-    setTheme(savedTheme);
-
-    themePillBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const themeId = btn.dataset.themeId;
-            setTheme(themeId);
-            showToast(`Liquid Theme Active: ${btn.textContent.trim()}`);
+    // 🔀 State View Navigation Controller
+    function switchState(stateId) {
+        [stateForm, stateLoading, stateResult].forEach(el => {
+            if (!el) return;
+            el.classList.remove('active');
+            el.classList.add('hidden');
         });
-    });
+        const target = document.getElementById(stateId);
+        if (target) {
+            target.classList.remove('hidden');
+            target.classList.add('active');
+        }
+    }
 
-    // 💧 Caustic Flash & Liquid Click Ripple Physics
+    // 🔊 Web Audio Micro-Tick Click Feedback
+    const audioCtx = typeof AudioContext !== 'undefined' ? new AudioContext() : null;
+    function playMicroTick() {
+        if (!audioCtx) return;
+        try {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.03);
+            gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.03);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.03);
+        } catch(e) {}
+    }
+
+    // 💧 Tactile Click Event Listener & Ripple Physics
     document.addEventListener('click', (e) => {
-        const targetBtn = e.target.closest('button, .chip-btn, .theme-pill-btn, .fame-card');
+        const targetBtn = e.target.closest('button, .chip-btn, .fame-card');
         if (!targetBtn) return;
+        playMicroTick();
 
         const rect = targetBtn.getBoundingClientRect();
         const size = Math.max(rect.width, rect.height);
@@ -69,46 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => ripple.remove(), 650);
     });
 
-    // 🌊 Interactive Liquid Glass Container Spotlight Physics
-    const glassContainers = document.querySelectorAll('.glass-search-container, .fame-card, .liquid-console-wrapper, .loading-glass-card');
-    glassContainers.forEach(container => {
-        container.addEventListener('mousemove', (e) => {
-            const rect = container.getBoundingClientRect();
-            const x = ((e.clientX - rect.left) / rect.width) * 100;
-            const y = ((e.clientY - rect.top) / rect.height) * 100;
-            container.style.backgroundImage = `radial-gradient(circle at ${x}% ${y}%, var(--glass-bg-hover) 0%, var(--glass-bg) 85%)`;
-        });
-
-        container.addEventListener('mouseleave', () => {
-            container.style.backgroundImage = '';
-        });
-    });
-
-    function showToast(message, isHtml = false) {
-        if (!toast) return;
-        if (isHtml) {
-            toast.innerHTML = message;
-        } else {
-            toast.textContent = message;
-        }
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 5000);
-    }
-
-    function switchState(stateId) {
-        [stateForm, stateLoading, stateResult].forEach(el => {
-            if (!el) return;
-            el.classList.remove('active');
-            el.classList.add('hidden');
-        });
-        const target = document.getElementById(stateId);
-        if (target) {
-            target.classList.remove('hidden');
-            target.classList.add('active');
-        }
-    }
-
-    // 🔬 Hydraulic Borosilicate Specimen Card Tilt Physics
+    // 🔬 3D Card Tilt Effect
     if (cardFrame) {
         let currentX = 0, currentY = 0;
         let targetX = 0, targetY = 0;
@@ -140,12 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!animId) {
                 animId = requestAnimationFrame(updateHydraulicTilt);
             }
-            
-            if (glowBackdrop) {
-                const glowX = (x / rect.width) * 100;
-                const glowY = (y / rect.height) * 100;
-                glowBackdrop.style.background = `radial-gradient(circle at ${glowX}% ${glowY}%, rgba(232, 213, 183, 0.35) 0%, transparent 65%)`;
-            }
         });
 
         cardFrame.addEventListener('mouseleave', () => {
@@ -154,14 +131,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!animId) {
                 animId = requestAnimationFrame(updateHydraulicTilt);
             }
-            if (glowBackdrop) {
-                glowBackdrop.style.background = 'radial-gradient(circle at 50% 50%, rgba(232, 213, 183, 0.15) 0%, transparent 70%)';
-            }
         });
     }
 
     // 🔢 Smooth Number Count-Up Animation
     function animateValue(element, start, end, duration, prefix = '', suffix = '') {
+        if (!element) return;
         let startTimestamp = null;
         const step = (timestamp) => {
             if (!startTimestamp) startTimestamp = timestamp;
@@ -175,71 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.requestAnimationFrame(step);
     }
 
-    async function connectWallet() {
-        const provider = window.okxwallet?.ethereum || window.okxwallet || window.ethereum;
-        if (!provider) {
-            showToast('OKX Wallet extension not detected! Please install OKX Wallet.');
-            window.open('https://www.okx.com/web3', '_blank');
-            return null;
-        }
-
-        try {
-            const accounts = await provider.request({ method: 'eth_requestAccounts' });
-            if (accounts.length > 0) {
-                const addr = accounts[0];
-                const shortAddr = `${addr.substring(0, 6)}...${addr.substring(addr.length - 4)}`;
-                if (headerConnectBtn) headerConnectBtn.textContent = shortAddr;
-                showToast(`OKX Wallet Connected: ${shortAddr}`);
-                return addr;
-            }
-        } catch (err) {
-            console.error(err);
-            showToast('Wallet connection cancelled.');
-        }
-        return null;
-    // 🔊 Web Audio Micro-Tick Click Feedback
-    const audioCtx = typeof AudioContext !== 'undefined' ? new AudioContext() : null;
-    function playMicroTick() {
-        if (!audioCtx) return;
-        try {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.03);
-            gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.03);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.03);
-        } catch(e) {}
-    }
-
-    // 💧 Tactile Click Event Listener
-    document.addEventListener('click', (e) => {
-        const targetBtn = e.target.closest('button, .chip-btn, .fame-card');
-        if (!targetBtn) return;
-        playMicroTick();
-
-        const rect = targetBtn.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        const x = e.clientX - rect.left - size / 2;
-        const y = e.clientY - rect.top - size / 2;
-
-        const ripple = document.createElement('span');
-        ripple.className = 'liquid-ripple';
-        ripple.style.width = ripple.style.height = `${size}px`;
-        ripple.style.left = `${x}px`;
-        ripple.style.top = `${y}px`;
-
-        targetBtn.appendChild(ripple);
-        setTimeout(() => ripple.remove(), 650);
-    });
-
-    // ✍️ Live Input Detection Badge
-    const inputBadge = document.getElementById('input-detection-badge');
+    // ✍️ Live Input Detection Badge Listener
     if (input && inputBadge) {
         input.addEventListener('input', () => {
             const val = input.value.trim();
@@ -293,9 +204,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (progress === 100 && onComplete) {
                 setTimeout(onComplete, 250);
             }
-        }, 80);
+        }, 60);
     }
 
+    // 🔮 Main API Query Function
     async function fetchAura(wallet) {
         if (!wallet) return;
         currentWallet = wallet;
@@ -304,13 +216,13 @@ document.addEventListener('DOMContentLoaded', () => {
         let apiData = null;
         let apiError = null;
 
-        // Start telemetry scanning progress simultaneously
+        // Start progress bar animation simultaneously
         startLoadingTelemetry(() => {
             if (apiData) {
                 renderResultView(apiData);
                 switchState('state-result');
             } else if (apiError) {
-                showToast('Failed to read aura. Please check the address.');
+                showToast('Failed to read aura. Please check the address and try again.');
                 switchState('state-form');
             }
         });
@@ -326,8 +238,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // 🎨 Render Results Data into DOM
     function renderResultView(data) {
-        cardImage.src = data.card_image_base64 || data.card_svg_url;
+        if (!data) return;
+        if (cardImage) cardImage.src = data.card_image_base64 || data.card_svg_url;
         
         const rarityBadge = document.getElementById('rarity-badge');
         const trustBadge = document.getElementById('trust-badge');
@@ -381,6 +295,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // 🦊 Web3 Wallet Connector
+    async function connectWallet() {
+        const provider = window.okxwallet?.ethereum || window.okxwallet || window.ethereum;
+        if (!provider) {
+            showToast('OKX Wallet extension not detected! Please install OKX Wallet.');
+            window.open('https://www.okx.com/web3', '_blank');
+            return null;
+        }
+
+        try {
+            const accounts = await provider.request({ method: 'eth_requestAccounts' });
+            if (accounts.length > 0) {
+                const addr = accounts[0];
+                const shortAddr = `${addr.substring(0, 6)}...${addr.substring(addr.length - 4)}`;
+                if (headerConnectBtn) headerConnectBtn.textContent = shortAddr;
+                showToast(`OKX Wallet Connected: ${shortAddr}`);
+                return addr;
+            }
+        } catch (err) {
+            console.error(err);
+            showToast('Wallet connection cancelled.');
+        }
+        return null;
+    }
+
+    if (headerConnectBtn) {
+        headerConnectBtn.addEventListener('click', () => connectWallet());
+    }
+
+    // 📝 Search Form & Button Listeners
     if (form) {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -407,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
     chipBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const wallet = btn.getAttribute('data-wallet');
-            input.value = wallet;
+            if (input) input.value = wallet;
             if (inputBadge) inputBadge.textContent = `✓ [DEMO TARGET: ${wallet}]`;
             fetchAura(wallet);
         });
@@ -416,19 +360,21 @@ document.addEventListener('DOMContentLoaded', () => {
     fameCards.forEach(card => {
         card.addEventListener('click', () => {
             const wallet = card.getAttribute('data-wallet');
-            input.value = wallet;
+            if (input) input.value = wallet;
             if (inputBadge) inputBadge.textContent = `✓ [SPECIMEN: ${wallet}]`;
             fetchAura(wallet);
         });
     });
 
-    resetBtn.addEventListener('click', () => {
-        input.value = '';
-        currentResultData = null;
-        currentWallet = '';
-        if (inputBadge) inputBadge.textContent = '◇ WAITING FOR INPUT...';
-        switchState('state-form');
-    });
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            if (input) input.value = '';
+            currentResultData = null;
+            currentWallet = '';
+            if (inputBadge) inputBadge.textContent = '◇ WAITING FOR INPUT...';
+            switchState('state-form');
+        });
+    }
 
     // ⚡ Web3 Soulbound Token (SBT) Minting (Real EVM Tx + Hackathon Judge Simulation Mode)
     if (mintSbtBtn) {
@@ -519,7 +465,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('specimen-modal');
     const modalCardImg = document.getElementById('modal-card-image');
     const card3DInner = document.getElementById('card-3d-inner');
-    const inspectModalBtn = document.getElementById('inspect-modal-btn');
     const modalFlipBtn = document.getElementById('modal-flip-btn');
     const modalCloseBtn = document.getElementById('modal-close-btn');
     const modalCloseBottomBtn = document.getElementById('modal-close-bottom-btn');
