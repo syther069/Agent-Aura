@@ -10,6 +10,13 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+    <!-- Liquid Ambient Caustic Background Blobs -->
+    <div class="liquid-bg-container" aria-hidden="true">
+        <div class="liquid-blob blob-1"></div>
+        <div class="liquid-blob blob-2"></div>
+        <div class="liquid-blob blob-3"></div>
+    </div>
+
     <!-- Dark Glass Sticky Navbar -->
     <header class="top-nav">
         <div class="nav-brand">
@@ -18,6 +25,12 @@
         </div>
         
         <div class="nav-right">
+            <div class="theme-selector-group" id="theme-selector">
+                <button type="button" class="theme-pill-btn active" data-theme-id="obsidian" title="Obsidian Void Theme">💧 Obsidian</button>
+                <button type="button" class="theme-pill-btn" data-theme-id="sapphire" title="Sapphire Liquid Theme">🌊 Sapphire</button>
+                <button type="button" class="theme-pill-btn" data-theme-id="amethyst" title="Amethyst Liquid Theme">🔮 Amethyst</button>
+                <button type="button" class="theme-pill-btn" data-theme-id="emerald" title="Emerald Liquid Theme">🌿 Emerald</button>
+            </div>
             <div class="status-chip desktop-only">
                 <span class="chip-dot"></span>
                 <span class="chip-val">GROQ LLM ⚡ ACTIVE</span>
@@ -134,37 +147,58 @@
                     <img id="card-image" src="" alt="Agent Aura Tarot Card">
                 </div>
 
-                <!-- Agent Trust Matrix Panel -->
-                <div class="trust-matrix-panel" id="trust-matrix">
-                    <div class="matrix-header">
-                        <span class="matrix-title">🛡️ AGENT-TO-AGENT (A2A) TRUST & RISK MATRIX</span>
-                        <span class="matrix-status" id="matrix-risk">RISK LEVEL: LOW</span>
+                <!-- Professional Minimalist Liquid Glass Console -->
+                <div class="liquid-console-wrapper" id="trust-matrix">
+                    <!-- Trust Matrix Header & Metrics -->
+                    <div class="liquid-matrix-section">
+                        <div class="matrix-top-bar">
+                            <div class="matrix-title-group">
+                                <span class="matrix-shield-icon">◇</span>
+                                <span class="matrix-title">AGENT-TO-AGENT (A2A) TRUST & RISK MATRIX</span>
+                            </div>
+                            <span class="matrix-status-pill" id="matrix-risk">RISK LEVEL: LOW</span>
+                        </div>
+                        <div class="matrix-grid">
+                            <div class="matrix-item">
+                                <span class="m-label">REPUTATION TIER</span>
+                                <span class="m-val" id="m-tier">VETERAN</span>
+                            </div>
+                            <div class="matrix-item">
+                                <span class="m-label">RECOMMENDED MAX TX</span>
+                                <span class="m-val" id="m-limit">100.0 ETH</span>
+                            </div>
+                            <div class="matrix-item">
+                                <span class="m-label">OKX X LAYER STATUS</span>
+                                <span class="m-val" id="m-xlayer">ACTIVE (CHAIN 196)</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="matrix-grid">
-                        <div class="matrix-item">
-                            <span class="m-label">REPUTATION TIER</span>
-                            <span class="m-val" id="m-tier">VETERAN</span>
-                        </div>
-                        <div class="matrix-item">
-                            <span class="m-label">RECOMMENDED MAX TX</span>
-                            <span class="m-val" id="m-limit">100.0 ETH</span>
-                        </div>
-                        <div class="matrix-item">
-                            <span class="m-label">OKX X LAYER STATUS</span>
-                            <span class="m-val" id="m-xlayer">ACTIVE (CHAIN 196)</span>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Dark Glassmorphic Action Console -->
-                <div class="glass-action-console">
-                    <button id="mint-sbt-btn" class="btn-glass-primary">⚡ MINT SBT ON OKX X LAYER →</button>
-                    <div class="glass-btn-row">
-                        <button id="download-btn" class="btn-glass-item">📥 DOWNLOAD CARD</button>
-                        <button id="share-x-btn" class="btn-glass-item">𝕏 SHARE ON X</button>
-                        <button id="copy-btn" class="btn-glass-item">🔗 COPY LINK</button>
+                    <!-- Subtle Liquid Divider -->
+                    <div class="liquid-console-divider"></div>
+
+                    <!-- Liquid Action Console Section -->
+                    <div class="liquid-action-section">
+                        <button id="mint-sbt-btn" class="btn-liquid-primary">
+                            <span class="btn-icon">⚡</span>
+                            <span>MINT SBT ON OKX X LAYER</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+                        <div class="liquid-btn-row">
+                            <button id="download-btn" class="btn-liquid-secondary">
+                                <span class="btn-icon">📥</span> CARD SVG
+                            </button>
+                            <button id="share-x-btn" class="btn-liquid-secondary">
+                                <span class="btn-icon">𝕏</span> SHARE ON X
+                            </button>
+                            <button id="copy-btn" class="btn-liquid-secondary">
+                                <span class="btn-icon">🔗</span> COPY LINK
+                            </button>
+                        </div>
+                        <button id="reset-btn" class="btn-liquid-ghost">
+                            <span>↺ ANALYZE ANOTHER WALLET</span>
+                        </button>
                     </div>
-                    <button id="reset-btn" class="btn-glass-full">↺ ANALYZE ANOTHER WALLET</button>
                 </div>
             </div>
         </main>

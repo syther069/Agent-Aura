@@ -18,9 +18,51 @@ document.addEventListener('DOMContentLoaded', () => {
     const chipBtns = document.querySelectorAll('.chip-btn');
     const fameCards = document.querySelectorAll('.fame-card');
     const headerConnectBtn = document.getElementById('header-connect-btn');
+    const themePillBtns = document.querySelectorAll('.theme-pill-btn');
 
     let currentResultData = null;
     let currentWallet = '';
+
+    // 💧 Liquid Glass Theme Controller
+    const savedTheme = localStorage.getItem('agent_aura_theme') || 'obsidian';
+
+    function setTheme(themeId) {
+        document.documentElement.setAttribute('data-theme', themeId);
+        localStorage.setItem('agent_aura_theme', themeId);
+        
+        themePillBtns.forEach(btn => {
+            if (btn.dataset.themeId === themeId) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+
+    setTheme(savedTheme);
+
+    themePillBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const themeId = btn.dataset.themeId;
+            setTheme(themeId);
+            showToast(`Liquid Theme Active: ${btn.textContent.trim()}`);
+        });
+    });
+
+    // 🌊 Interactive Liquid Glass Container Spotlight Physics
+    const glassContainers = document.querySelectorAll('.glass-search-container, .fame-card, .liquid-console-wrapper, .loading-glass-card');
+    glassContainers.forEach(container => {
+        container.addEventListener('mousemove', (e) => {
+            const rect = container.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            container.style.backgroundImage = `radial-gradient(circle at ${x}% ${y}%, var(--glass-bg-hover) 0%, var(--glass-bg) 80%)`;
+        });
+
+        container.addEventListener('mouseleave', () => {
+            container.style.backgroundImage = '';
+        });
+    });
 
     function showToast(message, isHtml = false) {
         if (!toast) return;
