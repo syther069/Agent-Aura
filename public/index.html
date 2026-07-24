@@ -171,8 +171,9 @@
                     <div class="relative mb-10">
                         <label for="wallet-input" class="font-label-mono text-label-mono uppercase text-secondary mb-4 block">ENTER WALLET ADDRESS OR ENS DOMAIN</label>
                         <input id="wallet-input" class="w-full bg-transparent border-b border-primary py-6 text-[22px] md:text-headline-lg font-headline-lg focus:outline-none focus:border-b-2 placeholder:text-surface-container-highest transition-all" placeholder="0x... or vitalik.eth" type="text" required autocomplete="off" spellcheck="false"/>
+                        <span id="input-detection-badge" class="font-label-mono text-[11px] uppercase text-secondary tracking-widest mt-2 block font-semibold">◇ WAITING FOR INPUT...</span>
                     </div>
-                    
+
                     <div class="flex flex-wrap gap-4 items-center mb-10">
                         <span class="font-label-mono text-label-mono uppercase text-secondary">TRY DEMO TARGETS:</span>
                         <button type="button" class="chip-btn border border-primary px-4 py-2 font-label-mono text-label-mono uppercase hover:bg-primary hover:text-white transition-all flex items-center gap-2" data-wallet="vitalik.eth">
@@ -256,12 +257,23 @@
             </section>
         </div>
 
-        <!-- LOADING STATE VIEW -->
-        <div id="state-loading" class="state-view hidden py-24">
-            <div class="border border-primary bg-white p-12 text-center max-w-xl mx-auto">
-                <div class="w-8 h-8 bg-primary animate-pulse mx-auto mb-6"></div>
-                <h3 class="font-headline-lg text-headline-lg mb-4 uppercase">ORACLE: DECONSTRUCTING SIGNATURES...</h3>
-                <p class="font-label-mono text-label-mono text-secondary uppercase">Parsing block records across E-155 protocol layers & OKX X Layer (Chain 196)</p>
+        <!-- MULTI-STAGE TELEMETRY LOADING STATE VIEW -->
+        <div id="state-loading" class="state-view hidden py-20">
+            <div class="border border-primary bg-white p-8 md:p-12 text-center max-w-xl mx-auto shadow-sm relative overflow-hidden">
+                <div class="flex justify-between items-center mb-6 border-b border-primary pb-3">
+                    <span class="font-label-mono text-label-mono text-primary font-bold uppercase">// TELEMETRY SCANNER</span>
+                    <span id="loading-percent" class="font-label-mono text-headline-lg text-[22px] font-bold text-primary">0%</span>
+                </div>
+                
+                <!-- Telemetry Progress Bar -->
+                <div class="w-full bg-surface-container-highest h-3 border border-primary mb-6 relative p-0.5">
+                    <div id="loading-progress-bar" class="bg-primary h-full w-0 transition-all duration-200"></div>
+                </div>
+
+                <h3 class="font-headline-lg text-[22px] md:text-headline-lg mb-4 uppercase">ORACLE: DECONSTRUCTING SIGNATURES...</h3>
+                <p id="loading-step-text" class="font-label-mono text-[12px] text-secondary uppercase tracking-widest min-h-[36px] flex items-center justify-center">
+                    [05%] Resolving ENS record & mainnet contract logs...
+                </p>
             </div>
         </div>
 
@@ -288,7 +300,7 @@
 
                 <!-- Central Card Display -->
                 <div class="lg:col-span-6 flex justify-center relative">
-                    <div class="relative group card-glass-frame cursor-pointer">
+                    <div class="relative group card-glass-frame cursor-pointer" title="Click to inspect specimen">
                         <!-- Frame decoration -->
                         <div class="absolute -inset-8 border border-primary opacity-20 pointer-events-none"></div>
                         <div class="absolute -inset-4 border border-primary opacity-40 pointer-events-none"></div>
@@ -329,6 +341,9 @@
                                 COPY LINK
                             </button>
                         </div>
+                        <button id="inspect-modal-btn" class="w-full border border-primary py-3 font-label-mono text-label-mono uppercase text-primary hover:bg-primary hover:text-white transition-all">
+                            🔍 INSPECT SPECIMEN SLIDE
+                        </button>
                         <button id="reset-btn" class="w-full border border-primary py-3 font-label-mono text-label-mono uppercase text-secondary hover:text-primary hover:border-black transition-all">
                             ◇ EXAMINE NEW SPECIMEN
                         </button>
@@ -337,6 +352,60 @@
             </section>
         </div>
     </main>
+
+    <!-- FULLSCREEN SPECIMEN LIGHTBOX & 3D FLIP MODAL -->
+    <div id="specimen-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-background border border-primary p-6 md:p-8 max-w-2xl w-full relative shadow-2xl">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center border-b border-primary pb-4 mb-6">
+                <span class="font-label-mono text-label-mono text-primary font-bold uppercase">// SPECIMEN LIGHTBOX INSPECTOR</span>
+                <button id="modal-close-btn" class="font-label-mono text-headline-lg text-[24px] hover:opacity-60 px-2">✕</button>
+            </div>
+
+            <!-- 3D Flip Card Container -->
+            <div class="perspective-1000 my-4 flex justify-center">
+                <div id="card-3d-inner" class="card-3d-inner relative w-[320px] md:w-[380px] h-[480px] md:h-[540px]">
+                    <!-- Front Side -->
+                    <div class="card-front absolute inset-0 bg-white border border-primary p-2 flex items-center justify-center">
+                        <img id="modal-card-image" src="" alt="Specimen Card Front" class="w-full h-full object-contain">
+                    </div>
+                    <!-- Reverse Cryptographic Telemetry Side -->
+                    <div class="card-back absolute inset-0 bg-primary text-white p-6 border border-white flex flex-col justify-between overflow-y-auto">
+                        <div>
+                            <div class="font-label-mono text-[10px] text-surface-container-highest uppercase border-b border-secondary pb-2 mb-4">// CRYPTOGRAPHIC TELEMETRY PROOF</div>
+                            <pre id="modal-telemetry-json" class="font-label-mono text-[11px] leading-relaxed opacity-90 whitespace-pre-wrap font-mono">
+{
+  "protocol": "AGENT_AURA_EIP155",
+  "chainId": 196,
+  "network": "OKX X Layer Mainnet",
+  "gasUsed": "21,048",
+  "sha256Signature": "0x8f4a...91bc"
+}
+                            </pre>
+                        </div>
+                        <div class="border-t border-secondary pt-3 text-center">
+                            <span class="font-label-mono text-[10px] uppercase opacity-70">VERIFIED ON-CHAIN SPECIMEN</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Action Buttons -->
+            <div class="flex flex-wrap gap-4 justify-between items-center border-t border-primary pt-6 mt-4">
+                <button id="modal-flip-btn" class="bg-primary text-white font-label-mono text-label-mono uppercase px-6 py-3 hover:bg-secondary transition-all">
+                    🔄 FLIP SPECIMEN SLIDE
+                </button>
+                <div class="flex gap-2">
+                    <button id="modal-download-btn" class="border border-primary font-label-mono text-label-mono uppercase px-4 py-3 hover:bg-primary hover:text-white transition-all">
+                        DOWNLOAD SVG
+                    </button>
+                    <button id="modal-close-bottom-btn" class="border border-primary font-label-mono text-label-mono uppercase px-4 py-3 hover:bg-secondary hover:text-white transition-all">
+                        CLOSE
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer Shell -->
     <footer class="bg-background border-t border-primary mt-32">
