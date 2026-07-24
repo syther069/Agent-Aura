@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetBtn = document.getElementById('reset-btn');
     const toast = document.getElementById('toast');
     const chipBtns = document.querySelectorAll('.chip-btn');
+    const fameCards = document.querySelectorAll('.fame-card');
     const headerConnectBtn = document.getElementById('header-connect-btn');
 
     let currentResultData = null;
@@ -43,14 +44,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cardFrame) {
         cardFrame.addEventListener('mousemove', (e) => {
             const rect = cardFrame.getBoundingClientRect();
-            const x = e.clientX - rect.left; // x position within element
-            const y = e.clientY - rect.top;  // y position within element
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
             
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
             
-            const rotateY = ((x - centerX) / centerX) * 12; // Max 12deg tilt Y
-            const rotateX = -((y - centerY) / centerY) * 12; // Max 12deg tilt X
+            const rotateY = ((x - centerX) / centerX) * 12;
+            const rotateX = -((y - centerY) / centerY) * 12;
             
             cardFrame.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
             
@@ -137,6 +138,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 animateValue(trustBadge, 0, targetScore, 1000, 'TRUST SCORE ', '/100');
             }
 
+            // Populate Agent-to-Agent (A2A) Trust Matrix Panel
+            const mRisk = document.getElementById('matrix-risk');
+            const mTier = document.getElementById('m-tier');
+            const mLimit = document.getElementById('m-limit');
+            const mXLayer = document.getElementById('m-xlayer');
+
+            if (data.trust) {
+                if (mRisk) mRisk.textContent = `RISK LEVEL: ${data.trust.riskLevel || 'LOW'}`;
+                if (mTier) mTier.textContent = data.trust.reputationTier || 'VETERAN';
+                if (mLimit) mLimit.textContent = data.trust.recommendedMaxTx || '100.0 ETH';
+            }
+            if (mXLayer) {
+                mXLayer.textContent = data.stats?.xLayerActive ? 'ACTIVE (CHAIN 196)' : 'MAINNET OBSERVER';
+            }
+
             setTimeout(() => {
                 switchState('state-result');
             }, 400);
@@ -156,6 +172,14 @@ document.addEventListener('DOMContentLoaded', () => {
     chipBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const wallet = btn.getAttribute('data-wallet');
+            input.value = wallet;
+            fetchAura(wallet);
+        });
+    });
+
+    fameCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const wallet = card.getAttribute('data-wallet');
             input.value = wallet;
             fetchAura(wallet);
         });

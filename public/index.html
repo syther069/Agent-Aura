@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AGENT AURA — On-Chain Personality Oracle / X Layer</title>
+    <title>AGENT AURA — On-Chain Personality Oracle & AI Trust Rating / OKX X Layer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -20,7 +20,7 @@
         <div class="nav-right">
             <div class="status-chip desktop-only">
                 <span class="chip-dot"></span>
-                <span class="chip-val">GROQ LLM ORACLE</span>
+                <span class="chip-val">GROQ LLM ⚡ ACTIVE</span>
             </div>
             <button type="button" class="btn-connect" id="header-connect-btn">CONNECT WALLET</button>
         </div>
@@ -34,7 +34,7 @@
                 <span class="hero-kicker">// ON-CHAIN OBSERVATION ORACLE</span>
                 <h1 class="hero-title">The Ledger Remembers.</h1>
                 <p class="hero-desc">
-                    A single query to reveal your on-chain aura. No signatures, no permissions, just pure ledger observation.
+                    A single query to reveal your soulbound Web3 archetype and AI agent trust score. Powered by Groq LLM & OKX X Layer.
                 </p>
                 
                 <!-- Dark Glass Search Container -->
@@ -54,14 +54,63 @@
                     <button type="button" class="chip-btn" data-wallet="0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045">OG Whale</button>
                 </div>
             </div>
+
+            <!-- Hall of Fame Leaderboard Section -->
+            <section class="hall-of-fame-section">
+                <div class="section-header">
+                    <span class="section-kicker">// ON-CHAIN LEGENDS</span>
+                    <h2 class="section-title">Hall of Fame</h2>
+                </div>
+
+                <div class="fame-grid">
+                    <div class="fame-card" data-wallet="vitalik.eth">
+                        <div class="fame-top">
+                            <span class="fame-address">vitalik.eth</span>
+                            <span class="fame-rarity">✦ LEGENDARY</span>
+                        </div>
+                        <h4 class="fame-archetype">OG Whale Whisperer</h4>
+                        <p class="fame-quote">"Architect of the ledger, weaving smart contract lore across Ethereum & X Layer."</p>
+                        <div class="fame-foot">
+                            <span>TRUST SCORE 90/100</span>
+                            <span class="fame-action">INSPECT →</span>
+                        </div>
+                    </div>
+
+                    <div class="fame-card" data-wallet="0x28c6c06298d514db089934071355e5743bf21d60">
+                        <div class="fame-top">
+                            <span class="fame-address">Binance Hot</span>
+                            <span class="fame-rarity">✦ MYTHIC</span>
+                        </div>
+                        <h4 class="fame-archetype">Yield Alchemist</h4>
+                        <p class="fame-quote">"Master of liquidity pools, moving billions in silent atomic precision."</p>
+                        <div class="fame-foot">
+                            <span>TRUST SCORE 95/100</span>
+                            <span class="fame-action">INSPECT →</span>
+                        </div>
+                    </div>
+
+                    <div class="fame-card" data-wallet="0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045">
+                        <div class="fame-top">
+                            <span class="fame-address">0xd8d...6045</span>
+                            <span class="fame-rarity">✦ MYTHIC</span>
+                        </div>
+                        <h4 class="fame-archetype">Diamond Mystic</h4>
+                        <p class="fame-quote">"Unbroken conviction amidst bear market liquidations, holding genesis vault keys."</p>
+                        <div class="fame-foot">
+                            <span>TRUST SCORE 92/100</span>
+                            <span class="fame-action">INSPECT →</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
 
         <!-- Loading State View -->
         <main class="state-loading" id="state-loading">
             <div class="loading-glass-card">
                 <div class="spinner-ring"></div>
-                <h3 class="loading-title">Reading On-Chain History...</h3>
-                <p class="loading-desc">Extracting signals from Ethereum Mainnet & OKX X Layer</p>
+                <h3 class="loading-title">Synthesizing Groq LLM Oracle...</h3>
+                <p class="loading-desc">Extracting signals from Ethereum Mainnet & OKX X Layer (Chain 196)</p>
             </div>
         </main>
 
@@ -83,6 +132,28 @@
                 <div class="card-glass-frame">
                     <div class="aura-glow-backdrop"></div>
                     <img id="card-image" src="" alt="Agent Aura Tarot Card">
+                </div>
+
+                <!-- Agent Trust Matrix Panel -->
+                <div class="trust-matrix-panel" id="trust-matrix">
+                    <div class="matrix-header">
+                        <span class="matrix-title">🛡️ AGENT-TO-AGENT (A2A) TRUST & RISK MATRIX</span>
+                        <span class="matrix-status" id="matrix-risk">RISK LEVEL: LOW</span>
+                    </div>
+                    <div class="matrix-grid">
+                        <div class="matrix-item">
+                            <span class="m-label">REPUTATION TIER</span>
+                            <span class="m-val" id="m-tier">VETERAN</span>
+                        </div>
+                        <div class="matrix-item">
+                            <span class="m-label">RECOMMENDED MAX TX</span>
+                            <span class="m-val" id="m-limit">100.0 ETH</span>
+                        </div>
+                        <div class="matrix-item">
+                            <span class="m-label">OKX X LAYER STATUS</span>
+                            <span class="m-val" id="m-xlayer">ACTIVE (CHAIN 196)</span>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Action Controls -->
