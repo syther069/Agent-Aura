@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <!-- Editorial Navigation -->
+    <!-- Dark Glass Sticky Navbar -->
     <header class="top-nav">
         <div class="nav-brand">
             <span class="brand-title">Agent Aura</span>
@@ -19,8 +19,8 @@
         
         <div class="nav-right">
             <div class="status-chip desktop-only">
-                <span class="chip-label">ORACLE:</span>
-                <span class="chip-val">GROQ LLM / ACTIVE</span>
+                <span class="chip-dot"></span>
+                <span class="chip-val">GROQ LLM ORACLE</span>
             </div>
             <button type="button" class="btn-connect" id="header-connect-btn">CONNECT WALLET</button>
         </div>
@@ -31,16 +31,16 @@
         <!-- Form State View -->
         <main class="state-form active" id="state-form">
             <div class="hero-section">
-                <span class="hero-kicker">ON-CHAIN OBSERVATION ORACLE</span>
+                <span class="hero-kicker">// ON-CHAIN OBSERVATION ORACLE</span>
                 <h1 class="hero-title">The Ledger Remembers.</h1>
                 <p class="hero-desc">
                     A single query to reveal your on-chain aura. No signatures, no permissions, just pure ledger observation.
                 </p>
                 
-                <!-- Editorial Search Bar Container -->
-                <form id="aura-form" class="editorial-search-container">
+                <!-- Dark Glass Search Container -->
+                <form id="aura-form" class="glass-search-container">
                     <div class="input-wrapper">
-                        <label for="wallet-input" class="input-micro-label">TARGET ADDRESS OR ENS</label>
+                        <label for="wallet-input" class="input-micro-label">TARGET ADDRESS OR ENS DOMAIN</label>
                         <input type="text" id="wallet-input" placeholder="0x... or vitalik.eth" required autocomplete="off" spellcheck="false">
                     </div>
                     <button type="submit" class="btn-reveal">REVEAL AURA →</button>
@@ -58,8 +58,8 @@
 
         <!-- Loading State View -->
         <main class="state-loading" id="state-loading">
-            <div class="loading-panel">
-                <div class="pulse-line"></div>
+            <div class="loading-glass-card">
+                <div class="spinner-ring"></div>
                 <h3 class="loading-title">Reading On-Chain History...</h3>
                 <p class="loading-desc">Extracting signals from Ethereum Mainnet & OKX X Layer</p>
             </div>
@@ -70,7 +70,7 @@
             <div class="result-layout">
                 <div class="result-header">
                     <div class="meta-titles">
-                        <span class="meta-kicker">SOULBOUND ARCHETYPE REVEALED</span>
+                        <span class="meta-kicker">// SOULBOUND ARCHETYPE REVEALED</span>
                         <h2 class="result-main-title">Your Aura Card</h2>
                     </div>
                     <div class="badge-group" id="badge-row">
@@ -79,18 +79,19 @@
                     </div>
                 </div>
 
-                <!-- Editorial Tarot Card Container -->
-                <div class="card-display-frame">
+                <!-- Glass Preview Frame -->
+                <div class="card-glass-frame">
+                    <div class="aura-glow-backdrop"></div>
                     <img id="card-image" src="" alt="Agent Aura Tarot Card">
                 </div>
 
                 <!-- Action Controls -->
                 <div class="action-grid">
-                    <button id="mint-sbt-btn" class="btn-ink-primary">MINT SBT ON X LAYER →</button>
-                    <button id="download-btn" class="btn-ink-secondary">DOWNLOAD CARD</button>
-                    <button id="share-x-btn" class="btn-ink-secondary">SHARE ON X</button>
-                    <button id="copy-btn" class="btn-ink-secondary">COPY LINK</button>
-                    <button id="reset-btn" class="btn-ink-secondary">ANALYZE ANOTHER WALLET</button>
+                    <button id="mint-sbt-btn" class="btn-primary-alabaster">MINT SBT ON X LAYER →</button>
+                    <button id="download-btn" class="btn-glass-secondary">DOWNLOAD CARD</button>
+                    <button id="share-x-btn" class="btn-glass-secondary">SHARE ON X</button>
+                    <button id="copy-btn" class="btn-glass-secondary">COPY LINK</button>
+                    <button id="reset-btn" class="btn-glass-secondary">ANALYZE ANOTHER WALLET</button>
                 </div>
             </div>
         </main>
