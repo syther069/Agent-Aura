@@ -19,7 +19,7 @@ function generateCardSvg(walletAddress, archetypeData) {
 
     const safeShortAddress = escapeXml(shortAddress).toUpperCase();
     const safeArchetype = escapeXml(archetype).toUpperCase();
-    const safeColor = escapeXml(color || '#FFFFFF');
+    const safeColor = escapeXml(color || '#1D1D1F');
     const safeGlowColor = escapeXml(glowColor || '#94A3B8');
     const rarityLabel = escapeXml(rarity?.badge || 'RARE ARCHETYPE').toUpperCase();
     const trustScoreVal = trust?.trustScore || stats?.trustScore || 85;
@@ -35,17 +35,17 @@ function generateCardSvg(walletAddress, archetypeData) {
             <style>
                 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap');
                 
-                .bg { fill: #000000; }
-                .glass-card-base { fill: rgba(255, 255, 255, 0.03); stroke: rgba(255, 255, 255, 0.15); stroke-width: 1.5; }
-                .glass-highlight-ring { fill: none; stroke: url(#specularGrad); stroke-width: 1.2; opacity: 0.65; }
-                .glass-accent-circle { fill: none; stroke: rgba(255, 255, 255, 0.08); stroke-width: 1; }
-                .glass-accent-line { stroke: rgba(255, 255, 255, 0.08); stroke-width: 1; }
+                .bg { fill: #FAF9F6; }
+                .glass-card-base { fill: rgba(255, 255, 255, 0.65); stroke: rgba(0, 0, 0, 0.08); stroke-width: 1.5; }
+                .glass-highlight-ring { fill: none; stroke: url(#specularGrad); stroke-width: 1.2; opacity: 0.85; }
+                .glass-accent-circle { fill: none; stroke: rgba(0, 0, 0, 0.04); stroke-width: 1; }
+                .glass-accent-line { stroke: rgba(0, 0, 0, 0.04); stroke-width: 1; }
                 
                 .serial {
                     font-family: 'IBM Plex Mono', monospace;
                     font-size: 13px;
                     font-weight: 500;
-                    fill: #E2E8F0;
+                    fill: #86868B;
                     letter-spacing: 6px;
                 }
                 
@@ -53,7 +53,7 @@ function generateCardSvg(walletAddress, archetypeData) {
                     font-family: 'IBM Plex Mono', monospace;
                     font-size: 10px;
                     font-weight: 600;
-                    fill: #FFFFFF;
+                    fill: #1D1D1F;
                     letter-spacing: 4px;
                 }
 
@@ -61,7 +61,7 @@ function generateCardSvg(walletAddress, archetypeData) {
                     font-family: 'Fraunces', serif;
                     font-size: 56px;
                     font-weight: 300;
-                    fill: #F5F3EF;
+                    fill: #1D1D1F;
                     letter-spacing: 2px;
                 }
                 
@@ -69,7 +69,7 @@ function generateCardSvg(walletAddress, archetypeData) {
                     font-family: 'IBM Plex Mono', monospace;
                     font-size: 19px;
                     font-weight: 400;
-                    fill: #CBD5E1;
+                    fill: #434345;
                     line-height: 1.7;
                     letter-spacing: 0.5px;
                 }
@@ -78,7 +78,7 @@ function generateCardSvg(walletAddress, archetypeData) {
                     font-family: 'IBM Plex Mono', monospace;
                     font-size: 11px;
                     font-weight: 600;
-                    fill: #E2E8F0;
+                    fill: #1D1D1F;
                     letter-spacing: 3px;
                 }
 
@@ -86,23 +86,23 @@ function generateCardSvg(walletAddress, archetypeData) {
                     font-family: 'IBM Plex Mono', monospace;
                     font-size: 11px;
                     font-weight: 500;
-                    fill: #64748B;
+                    fill: #86868B;
                     letter-spacing: 5px;
                 }
             </style>
             
-            <!-- Luxury Specular Reflection Gradient -->
+            <!-- Specular Light-Mode Refraction Gradient -->
             <linearGradient id="specularGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.8" />
-                <stop offset="30%" stop-color="#FFFFFF" stop-opacity="0.1" />
-                <stop offset="70%" stop-color="#94A3B8" stop-opacity="0.1" />
-                <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.6" />
+                <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
+                <stop offset="40%" stop-color="#E2E8F0" stop-opacity="0.5" />
+                <stop offset="70%" stop-color="#CBD5E1" stop-opacity="0.3" />
+                <stop offset="100%" stop-color="#94A3B8" stop-opacity="0.75" />
             </linearGradient>
 
-            <!-- Dynamic Liquid Background Glow -->
+            <!-- Soft Light-Mode Aura Glow -->
             <radialGradient id="auraGlow" cx="50%" cy="42%" r="50%" fx="50%" fy="42%">
-                <stop offset="0%" stop-color="${safeGlowColor}" stop-opacity="0.22" />
-                <stop offset="60%" stop-color="${safeGlowColor}" stop-opacity="0.05" />
+                <stop offset="0%" stop-color="${safeGlowColor}" stop-opacity="0.16" />
+                <stop offset="60%" stop-color="${safeGlowColor}" stop-opacity="0.04" />
                 <stop offset="100%" stop-color="${safeGlowColor}" stop-opacity="0" />
             </radialGradient>
         </defs>
@@ -120,8 +120,8 @@ function generateCardSvg(walletAddress, archetypeData) {
         <!-- Abstract Glass Circular Rings (Simulating Liquid Lens Refractions) -->
         <circle class="glass-accent-circle" cx="400" cy="450" r="320" />
         <circle class="glass-accent-circle" cx="400" cy="450" r="240" />
-        <path d="M 120 450 A 280 280 0 0 1 680 450" fill="none" stroke="url(#specularGrad)" stroke-width="1.5" opacity="0.4" />
-        <path d="M 200 450 A 200 200 0 0 0 600 450" fill="none" stroke="url(#specularGrad)" stroke-width="1.2" opacity="0.3" />
+        <path d="M 120 450 A 280 280 0 0 1 680 450" fill="none" stroke="url(#specularGrad)" stroke-width="1.5" opacity="0.65" />
+        <path d="M 200 450 A 200 200 0 0 0 600 450" fill="none" stroke="url(#specularGrad)" stroke-width="1.2" opacity="0.5" />
 
         <!-- Decorative Technical Glass Lines -->
         <line class="glass-accent-line" x1="40" y1="280" x2="760" y2="280" />
@@ -134,7 +134,7 @@ function generateCardSvg(walletAddress, archetypeData) {
         <line class="glass-accent-line" x1="300" y1="145" x2="500" y2="145" />
         
         <!-- Rarity Badge (Minimal Glass Frame) -->
-        <rect x="250" y="180" width="300" height="34" rx="17" fill="rgba(255,255,255,0.02)" stroke="url(#specularGrad)" stroke-width="1" />
+        <rect x="250" y="180" width="300" height="34" rx="17" fill="rgba(0,0,0,0.01)" stroke="url(#specularGrad)" stroke-width="1" />
         <text class="rarity-pill" x="400" y="202" text-anchor="middle">◇ ${rarityLabel} ◇</text>
 
         <!-- Main Content -->
@@ -149,13 +149,12 @@ function generateCardSvg(walletAddress, archetypeData) {
         </g>
         
         <!-- Stat signals -->
-        <rect x="80" y="930" width="640" height="46" rx="23" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+        <rect x="80" y="930" width="640" height="46" rx="23" fill="rgba(0,0,0,0.01)" stroke="rgba(0,0,0,0.04)" stroke-width="1" />
         ${statLine ? `<text class="stats-bar" x="400" y="958" text-anchor="middle">${escapeXml(statLine)}</text>` : ''}
 
         <!-- Footer / CTA -->
         <line class="glass-accent-line" x1="320" y1="1040" x2="480" y2="1040" />
         <text class="footer" x="400" y="1090" text-anchor="middle">ON-CHAIN DECENTRALIZED PROTOCOL · AGENT AURA</text>
-        
     </svg>`;
 }
 
