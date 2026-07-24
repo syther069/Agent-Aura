@@ -2,16 +2,16 @@
    AGENT AURA — PREMIUM DARK LIQUID GLASS UI DESIGN SYSTEM
    ========================================================================== */
 
-/* Theme 1: Obsidian Platinum (Default) */
+/* Theme 1: Smoked Onyx & Warm Graphite (Default) */
 :root, :root[data-theme="obsidian"] {
-    --bg-main: #030406;
-    --glass-bg: rgba(255, 255, 255, 0.035);
-    --glass-bg-hover: rgba(255, 255, 255, 0.075);
-    --glass-border: rgba(255, 255, 255, 0.12);
-    --glass-border-hover: rgba(255, 255, 255, 0.32);
-    --glass-highlight: rgba(255, 255, 255, 0.28);
-    --glass-shadow: rgba(0, 0, 0, 0.85);
-    --liquid-glow-1: rgba(255, 255, 255, 0.08);
+    --bg-main: #0A0B0E;
+    --glass-bg: rgba(255, 255, 255, 0.04);
+    --glass-bg-hover: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.13);
+    --glass-border-hover: rgba(255, 255, 255, 0.35);
+    --glass-highlight: rgba(255, 255, 255, 0.30);
+    --glass-shadow: rgba(0, 0, 0, 0.70);
+    --liquid-glow-1: rgba(255, 255, 255, 0.09);
     --liquid-glow-2: rgba(200, 210, 225, 0.06);
     --liquid-glow-3: rgba(150, 165, 185, 0.05);
     --text-alabaster: #F5F3EF;
@@ -27,14 +27,14 @@
 
 /* Theme 2: Graphite Steel */
 :root[data-theme="sapphire"], :root[data-theme="graphite"] {
-    --bg-main: #050608;
-    --glass-bg: rgba(255, 255, 255, 0.04);
-    --glass-bg-hover: rgba(255, 255, 255, 0.085);
-    --glass-border: rgba(226, 232, 240, 0.14);
-    --glass-border-hover: rgba(255, 255, 255, 0.38);
-    --glass-highlight: rgba(255, 255, 255, 0.32);
-    --glass-shadow: rgba(0, 0, 0, 0.90);
-    --liquid-glow-1: rgba(226, 232, 240, 0.08);
+    --bg-main: #0C0D11;
+    --glass-bg: rgba(255, 255, 255, 0.045);
+    --glass-bg-hover: rgba(255, 255, 255, 0.09);
+    --glass-border: rgba(226, 232, 240, 0.15);
+    --glass-border-hover: rgba(255, 255, 255, 0.40);
+    --glass-highlight: rgba(255, 255, 255, 0.35);
+    --glass-shadow: rgba(0, 0, 0, 0.75);
+    --liquid-glow-1: rgba(226, 232, 240, 0.09);
     --liquid-glow-2: rgba(148, 163, 184, 0.06);
     --liquid-glow-3: rgba(100, 116, 139, 0.05);
     --text-alabaster: #F8FAFC;
@@ -45,16 +45,16 @@
     --hero-title-grad: linear-gradient(180deg, #FFFFFF 0%, #CBD5E1 55%, #64748B 100%);
 }
 
-/* Theme 3: Platinum Monochrome */
+/* Theme 3: Platinum Charcoal */
 :root[data-theme="amethyst"], :root[data-theme="platinum"] {
-    --bg-main: #020304;
-    --glass-bg: rgba(255, 255, 255, 0.045);
-    --glass-bg-hover: rgba(255, 255, 255, 0.095);
-    --glass-border: rgba(255, 255, 255, 0.16);
-    --glass-border-hover: rgba(255, 255, 255, 0.42);
-    --glass-highlight: rgba(255, 255, 255, 0.38);
-    --glass-shadow: rgba(0, 0, 0, 0.92);
-    --liquid-glow-1: rgba(255, 255, 255, 0.10);
+    --bg-main: #08090C;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-bg-hover: rgba(255, 255, 255, 0.10);
+    --glass-border: rgba(255, 255, 255, 0.17);
+    --glass-border-hover: rgba(255, 255, 255, 0.44);
+    --glass-highlight: rgba(255, 255, 255, 0.40);
+    --glass-shadow: rgba(0, 0, 0, 0.78);
+    --liquid-glow-1: rgba(255, 255, 255, 0.11);
     --liquid-glow-2: rgba(226, 232, 240, 0.07);
     --liquid-glow-3: rgba(148, 163, 184, 0.05);
     --text-alabaster: #FFFFFF;
@@ -65,18 +65,18 @@
     --hero-title-grad: linear-gradient(180deg, #FFFFFF 0%, #E2E8F0 60%, #94A3B8 100%);
 }
 
-/* Theme 4: Abyssal Ice */
+/* Theme 4: Abyssal Charcoal */
 :root[data-theme="titanium"], :root[data-theme="abyssal"] {
-    --bg-main: #020408;
-    --glass-bg: rgba(240, 249, 255, 0.038);
-    --glass-bg-hover: rgba(240, 249, 255, 0.08);
-    --glass-border: rgba(186, 230, 253, 0.14);
-    --glass-border-hover: rgba(186, 230, 253, 0.36);
-    --glass-highlight: rgba(255, 255, 255, 0.32);
-    --glass-shadow: rgba(0, 2, 8, 0.92);
-    --liquid-glow-1: rgba(186, 230, 253, 0.08);
-    --liquid-glow-2: rgba(125, 211, 252, 0.05);
-    --liquid-glow-3: rgba(56, 189, 248, 0.04);
+    --bg-main: #090B10;
+    --glass-bg: rgba(240, 249, 255, 0.042);
+    --glass-bg-hover: rgba(240, 249, 255, 0.088);
+    --glass-border: rgba(186, 230, 253, 0.15);
+    --glass-border-hover: rgba(186, 230, 253, 0.38);
+    --glass-highlight: rgba(255, 255, 255, 0.34);
+    --glass-shadow: rgba(0, 2, 8, 0.78);
+    --liquid-glow-1: rgba(186, 230, 253, 0.09);
+    --liquid-glow-2: rgba(125, 211, 252, 0.06);
+    --liquid-glow-3: rgba(56, 189, 248, 0.05);
     --text-alabaster: #F0F9FF;
     --text-muted: #BAE6FD;
     --text-dim: #64748B;
