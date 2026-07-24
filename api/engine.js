@@ -150,11 +150,11 @@ async function generateGroqReading(walletAddress, signals, archetype) {
     if (!apiKey) return null;
 
     try {
-        const prompt = `You are an ancient Web3 Oracle reading a wallet's soulbound aura.
-Wallet: ${walletAddress}
-Archetype: ${archetype.name}
-Metrics: Age ${Math.floor(signals.walletAgeDays)} days, ${signals.txCount} transactions, ${signals.uniqueInteractions} protocols, X Layer Active: ${signals.xLayerActive ? 'Yes' : 'No'}.
-Task: Write a poetic 2-to-3 sentence reading revealing their true Web3 nature. Do not include markdown tags or intro text. Just the reading.`;
+        const prompt = `You are a cryptographic oracle deciphering the silent transactional resonance of a blockchain ledger.
+Wallet Address: ${walletAddress}
+Archetype Classification: ${archetype.name}
+Metrics: Account age ${Math.floor(signals.walletAgeDays)} days, ${signals.txCount} transactions, ${signals.uniqueInteractions} contract integrations, OKX X Layer Active: ${signals.xLayerActive ? 'Yes' : 'No'}.
+Task: Write a highly philosophical, cryptic, and poetic 2-sentence reading reflecting their transactional resonance. Avoid generic AI marketing tropes or introduction text. Return only the reading.`;
 
         const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
             model: 'llama-3.3-70b-versatile',
